@@ -13,35 +13,35 @@ typedef enum{sol, solEtAir, air } Tcible;
 
 typedef struct {
     TuniteDuJeu nom;
-    Tcible cibleAttaquable;	//indique le type des unités que l’on peut attaquer
-    Tcible maposition;		//indique soit « air » soit « sol », utile pour savoir
+    Tcible cibleAttaquable;	//indique le type des unitï¿½s que lï¿½on peut attaquer
+    Tcible maposition;		//indique soit ï¿½ air ï¿½ soit ï¿½ sol ï¿½, utile pour savoir
                             //qui peut nous attaquer
     int pointsDeVie;
-    float vitesseAttaque;	//en seconde, plus c’est petit plus c’est rapide
+    float vitesseAttaque;	//en seconde, plus cï¿½est petit plus cï¿½est rapide
     int degats;
-    int portee ;			//en mètre, distance sur laquelle on peut atteindre une
+    int portee ;			//en mï¿½tre, distance sur laquelle on peut atteindre une
                             //cible
 
     float vitessedeplacement;	//en m/s
     int posX, posY;			//position sur le plateau de jeu
-    int peutAttaquer;		//permet de gérer le fait que chaque unité attaque une
+    int peutAttaquer;		//permet de gï¿½rer le fait que chaque unitï¿½ attaque une
                             //seule fois par tour ;
-                            //0 = a déjà attaqué, 1 = peut attaquer ce tour-ci
-                            // à remettre à 1 au début de chaque tour
+                            //0 = a dï¿½jï¿½ attaquï¿½, 1 = peut attaquer ce tour-ci
+                            // ï¿½ remettre ï¿½ 1 au dï¿½but de chaque tour
 
-    //struct Tunite *cible;   //NULL si pas de cible. mettre à jour ce pointeur permet l'aninamtion (simpliste certe) du tir
-    //non utilisé au final -> utiliser directement dessineAttaque
+    //struct Tunite *cible;   //NULL si pas de cible. mettre ï¿½ jour ce pointeur permet l'aninamtion (simpliste certe) du tir
+    //non utilisï¿½ au final -> utiliser directement dessineAttaque
 
-    //int score_emplacement;  //un clin d'oeil pour suscister une idée de tri
+    //int score_emplacement;  //un clin d'oeil pour suscister une idï¿½e de tri
 } Tunite;
 
 typedef struct T_cell{
     struct T_cell *suiv;
-    Tunite *pdata; //pointeur vers une unité
+    Tunite *pdata; //pointeur vers une unitï¿½
 } *TListePlayer;
 
 
-typedef Tunite* ** TplateauJeu;  ////tableau a deux dimensions de largeur 11 et hauteur 19 contenant des pointeurs (Tunite*)
+typedef Tunite* ** TplateauJeu;  //tableau a deux dimensions de largeur 11 et hauteur 19 contenant des pointeurs (Tunite*)
 
 
 
@@ -57,23 +57,22 @@ void affichePlateauConsole(TplateauJeu jeu, int largeur, int hauteur);
 Tunite *creeTourSol(int posx, int posy);
 Tunite *creeTourAir(int posx, int posy);
 Tunite *creeTourRoi(int posx, int posy);
+Tunite *creeArcher(int posx, int posy);
+Tunite *creeGargouille(int posx, int posy);
+Tunite *creeDragon(int posx, int posy);
+Tunite *creeChevalier(int posx, int posy);
 
-/* fonctions du noyau que vous avez à coder
+void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
+
+/* fonctions du noyau que vous avez Ã  coder
 
 Bool tourRoiDetruite(TListePlayer player);
-void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
 
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante) ; //retourne la liste des cibles possibles
 Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
 
-
-Tunite *creeArcher(int posx, int posy);
-Tunite *creeGargouille(int posx, int posy);
 */
-Tunite *creeDragon(int posx, int posy);
 /*
-Tunite *creeChevalier(int posx, int posy);
-
 Void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite);
 Void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
 
