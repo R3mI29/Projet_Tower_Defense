@@ -4,6 +4,7 @@
 #include "towerdefend.h"
 
 
+
 //typedef Tunite* ** TplateauJeu;
 
 TplateauJeu AlloueTab2D(int largeur, int hauteur){
@@ -45,6 +46,7 @@ void ecritCheminVersleHaut(int **chemin, int *ichemin, int *xdepart, int *ydepar
     }
     else printf("erreur longueur chemin\n");
 }
+
 void ecritCheminVerslaDroite(int **chemin, int *ichemin, int *xdepart, int *ydepart, int distance, int *distanceMaxRestante){
     if ((*distanceMaxRestante - distance)>=0){
         int x;
@@ -57,6 +59,7 @@ void ecritCheminVerslaDroite(int **chemin, int *ichemin, int *xdepart, int *ydep
     }
     else printf("erreur longueur chemin\n");
 }
+
 void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydepart, int distance, int *distanceMaxRestante){
     if ((*distanceMaxRestante - distance)>=0){
         int x;
@@ -256,5 +259,33 @@ void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
             jeu[current->pdata->posX][current->pdata->posY] = current->pdata;
         }
         current = current->suiv;
+    }
+}
+
+
+void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
+{
+    TListePlayer cell = malloc(sizeof(struct T_cell)); 
+    cell->pdata = nouvelleUnite; 
+    cell->suiv = NULL;
+    if (*player == NULL)
+    {
+        *player = cell; 
+        return;
+    }
+    TListePlayer temp = *player; 
+    while (temp->suiv != NULL)
+    {
+        temp = temp->suiv;
+    }
+    temp->suiv = cell;
+}
+
+
+void DeplacerHorde(Tunite unite, TplateauJeu jeu)
+{
+    for (int i = 0; i < unite.vitessedeplacement; i++)
+    {
+           
     }
 }
