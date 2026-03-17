@@ -14,21 +14,13 @@ TplateauJeu AlloueTab2D(int largeur, int hauteur){
     }
     return jeu;  //tab2D contenant des pointeurs
 }
+
 void initPlateauAvecNULL(TplateauJeu jeu,int largeur, int hauteur){
     for (int i=0;i<largeur;i++){
         for (int j=0;j<hauteur;j++){
             jeu[i][j] = NULL;
         }
     }
-
-    //POUR LA DEMO D'AFFICHAGE UNIQUEMENT, A SUPPRIMER
-    //(les tours ici ne sont pas li�es aux listes des unit�s de vos joueurs)
-    jeu[5][3]=creeTourSol(5,3);
-    jeu[3][3]=creeTourAir(3,3);
-    jeu[4][1]=creeTourRoi(4,1);
-    jeu[4][15]=creeTourAir(4,15);
-    jeu[5][17]=creeDragon(5,17);
-    //FIN DEMO AFFICHAGE
 }
 
 
@@ -190,7 +182,7 @@ Tunite *creeDragon(int posx, int posy){
     nouv->maposition = air;
     nouv->pointsDeVie = 200;
     nouv->vitesseAttaque = 1.1;
-    nouv->degats = 180;
+    nouv->degats = 70;
     nouv->portee = 2;
     nouv->vitessedeplacement = 2;
     nouv->posX = posx;
@@ -198,4 +190,71 @@ Tunite *creeDragon(int posx, int posy){
     nouv->peutAttaquer = 1;
     //nouv->cible = NULL;
     return nouv;
+}
+
+Tunite *creeChevalier(int posx, int posy)
+{
+    Tunite *nouv = (Tunite*)malloc(sizeof(Tunite));
+    nouv->nom = chevalier;
+    nouv->cibleAttaquable = sol;
+    nouv->maposition = sol;
+    nouv->pointsDeVie = 400;
+    nouv->vitesseAttaque = 1.5;
+    nouv->degats = 250;
+    nouv->portee = 1;
+    nouv->vitessedeplacement = 2;
+    nouv->posX = posx;
+    nouv->posY = posy;
+    nouv->peutAttaquer = 1;
+    //nouv->cible = NULL;
+    return nouv;
+}
+
+Tunite * creeArcher(int posx, int posy)
+{
+    Tunite *nouv = (Tunite*)malloc(sizeof(Tunite));
+    nouv->nom = archer;
+    nouv->cibleAttaquable = solEtAir;
+    nouv->maposition = sol;
+    nouv->pointsDeVie = 80;
+    nouv->vitesseAttaque = 0.7;
+    nouv->degats = 120;
+    nouv->portee = 3;
+    nouv->vitessedeplacement = 1;
+    nouv->posX = posx;
+    nouv->posY = posy;
+    nouv->peutAttaquer = 1;
+    //nouv->cible = NULL;
+    return nouv;
+}
+
+Tunite * creeGargouille(int posx, int posy)
+{
+    Tunite *nouv = (Tunite*)malloc(sizeof(Tunite));
+    nouv->nom = gargouille;
+    nouv->cibleAttaquable = solEtAir;
+    nouv->maposition = air;
+    nouv->pointsDeVie = 80;
+    nouv->vitesseAttaque = 0.6;
+    nouv->degats = 90;
+    nouv->portee = 1;
+    nouv->vitessedeplacement = 3;
+    nouv->posX = posx;
+    nouv->posY = posy;
+    nouv->peutAttaquer = 1;
+    //nouv->cible = NULL;
+    return nouv;
+}
+
+void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
+{
+    TListePlayer current = player;
+    while (current != NULL)
+    {
+        if (current->pdata != NULL)
+        {
+            jeu[current->pdata->posX][current->pdata->posY] = current->pdata;
+        }
+        current = current->suiv;
+    }
 }
