@@ -62,20 +62,15 @@ Tunite *creeGargouille(int posx, int posy);
 Tunite *creeDragon(int posx, int posy);
 Tunite *creeChevalier(int posx, int posy);
 
-void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
+void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu);
+void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
 
-/* fonctions du noyau que vous avez à coder
+/* fonctions du noyau que vous avez à coder:
 
 Bool tourRoiDetruite(TListePlayer player);
-
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante) ; //retourne la liste des cibles possibles
 Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
-
-*/
-/*
 Void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite);
-Void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
-
 */
-
+    
 #endif // TOWERDEFEND_H_INCLUDED
