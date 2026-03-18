@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "SDL.h"
 #include "towerdefend.h"
 
@@ -285,21 +286,68 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
 {
     int etape_actuelle = 0;
+    int vitesse = (int)unite->vitessedeplacement;
     for (int i = 0; i < NBCOORDPARCOURS; i++) {
         if (unite->posX == chemin[i][0] && unite->posY == chemin[i][1]) {
             etape_actuelle = i;
             break;
         }
     }
-    int vitesse = (int)unite->vitessedeplacement;
     if (etape_actuelle+vitesse > NBCOORDPARCOURS-1)
-    {        
-        unite->posX = chemin[48][0];
-        unite->posY = chemin[48][1];
+    {
+        int i = 2;
+        int posx = chemin[NBCOORDPARCOURS -i][0];
+        int posy = chemin[NBCOORDPARCOURS -i][1];
+        if (!CaseOccupe(posx, posy, jeu))
+        {
+            unite->posX = chemin[NBCOORDPARCOURS - i][0];
+            unite->posY = chemin[NBCOORDPARCOURS - i][1];   
+        }
+        else if (CaseOccupe(posx, posy, jeu))
+        {    
+            while (CaseOccupe(posx, posy, jeu) == false)
+            {
+                i++;
+                posx = chemin[NBCOORDPARCOURS - i][0];
+                posy = chemin[NBCOORDPARCOURS - i][1];
+            }
+            unite->posX = posx;
+            unite->posY = posy;
+        }
     }
     else if (etape_actuelle+vitesse <= NBCOORDPARCOURS - 1)
     {
-        unite->posX = chemin[etape_actuelle + vitesse][0];
-        unite->posY = chemin[etape_actuelle + vitesse][1];
+        int i = 0;
+        int posx = chemin[etape_actuelle + vitesse][0];
+        int posy = chemin[etape_actuelle + vitesse][1];
+        if (!CaseOccupe(posx, posy, jeu))
+        {
+            unite->posX = posx;
+            unite->posY = posy;   
+        }
+        else if (CaseOccupe(posx, posy, jeu))
+        {
+            while (CaseOccupe(posx, posy, jeu) == false)
+            {
+                i++;
+                posx = chemin[(etape_actuelle + vitesse) - i][0];
+                posy = chemin[(etape_actuelle + vitesse) - i][1];
+            }
+            unite->posX = posx;
+            unite->posY = posy;
+        }
+    }
+}
+
+
+bool CaseOccupe(int posx, int posy, TplateauJeu jeu)
+{
+    if (jeu[posx][posy] == NULL)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
