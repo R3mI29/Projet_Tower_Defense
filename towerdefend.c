@@ -382,3 +382,58 @@ bool CaseOccupe(int posx, int posy, TplateauJeu jeu)
         return false;
     }
 }
+
+
+//*************************************************************************************************************//
+//
+// Fonction     tourRoiDetruite
+//
+// Param = TListePlayer player (la liste des unite du joueur qui n'est pas de la horde)
+//
+// Return = Bool (Renvoie true si la tour du roi n'a plus de points de vie, donc est detruite.
+//                Ou renvoie flase si elle est encore en vie avec des points de vie > 0.
+//                Return NULL si la tour du roi n'est pas trouver dans la liste du joueur ce qui est un erreur.) 
+//
+// Complexité = Espace = O(1)
+//              Temps = O(1)
+//
+//*************************************************************************************************************//
+bool tourRoiDetruite(TListePlayer player)
+{
+    if (player->pdata->nom == tourRoi)
+    {
+        if (player->pdata->pointsDeVie <=0)
+        {
+            return true;
+        }
+        else if (player->pdata->pointsDeVie > 0)
+        {
+            return false;
+        }
+    }
+    printf("\nLa tour du roi n'est pas dans la liste du joueur !!!\n");
+    return NULL;
+}
+
+
+
+TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
+{
+    TListePlayer lst;
+    int posx = UniteAttaquante->posX;
+    int posy = UniteAttaquante->posY;
+    int porte = UniteAttaquante->portee;
+    for (int i = 0; i < porte; i++)
+    {
+        for (int z = 0; z <porte; z++)
+        {
+            /*à partir de là je suis pas sûr*/
+            if (jeu[posx-i][posy-z] != NULL)
+            {
+                Tunite* unit = jeu[posx][posy];
+                lst->pdata = unit;
+                lst = lst->suiv; 
+            }
+        }
+    }
+}

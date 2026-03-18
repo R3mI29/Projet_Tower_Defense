@@ -66,10 +66,9 @@ void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu);
 void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
 void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu);
 bool CaseOccupe(int posx, int posy, TplateauJeu jeu);
+bool tourRoiDetruite(TListePlayer player);
 
 /* fonctions du noyau que vous avez à coder:
-
-Bool tourRoiDetruite(TListePlayer player);
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante) ; //retourne la liste des cibles possibles
 Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
 Void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite);
