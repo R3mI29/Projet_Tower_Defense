@@ -419,21 +419,57 @@ bool tourRoiDetruite(TListePlayer player)
 
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
 {
-    TListePlayer lst;
+    TListePlayer lst = NULL;
     int posx = UniteAttaquante->posX;
     int posy = UniteAttaquante->posY;
     int porte = UniteAttaquante->portee;
-    for (int i = 0; i < porte; i++)
+    for (int i = (-1)*porte; i <= porte; i++)
     {
-        for (int z = 0; z <porte; z++)
+        for (int z = (-1)*porte; z <= porte; z++)
         {
-            /*à partir de là je suis pas sûr*/
-            if (jeu[posx-i][posy-z] != NULL)
+            Tunite *current = jeu[posx - i][posy - z];
+            if ((current != NULL) && (current->nom != tourAir && current->nom != tourSol && current->nom != tourRoi) && (ciblable(UniteAttaquante, current)) && EstEnemi(UniteAttaquante, current))
             {
-                Tunite* unit = jeu[posx][posy];
-                lst->pdata = unit;
-                lst = lst->suiv; 
+                AjouterUnite(&lst,current);
             }
         }
     }
+    return lst;
+}
+
+bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
+{
+    if ((uniteAttaquante->cibleAttaquable == sol || uniteAttaquante->cibleAttaquable == solEtAir) && unitecible->maposition == sol)
+    {
+        return true;
+    }
+    else if ((uniteAttaquante->cibleAttaquable == air || uniteAttaquante->cibleAttaquable == solEtAir) && unitecible->maposition == air)
+    {
+        return true;
+    }
+    else
+    {
+        return  false;
+    }
+}
+
+bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
+{
+    int temp = 0;   //Si il vaut 1 l'attanquant est du roi sinon il vaut 2
+    if (uniteAttaquante->nom == tourAir || uniteAttaquante->nom == tourSol || uniteAttaquante->nom == tourRoi)
+    {
+        if (uniteCible->nom != tourAir && uniteCible->nom != tourRoi && uniteCible->nom != tourSol)
+        {
+            return true;
+        }
+        return false;
+    }
+    else if (uniteAttaquante->nom != tourAir && uniteAttaquante->nom != tourRoi && uniteAttaquante->nom != tourSol)
+    {
+        if (uniteCible->nom == tourAir || uniteCible->nom == tourRoi || uniteCible->nom == tourSol)
+        {
+            return true;
+        }
+        return false;
+    }    
 }
