@@ -282,6 +282,20 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
     temp->suiv = cell;
 }
 
+//*************************************************************************************************************//
+//
+// Fonction     DeplacerHorde
+//
+// Param = Tunite * unite (Pointeur sur l'unite que l'on veut deplacer)
+//          int ** chemin (Un tableau 2 dimnesions ou sont les cordonnees des cases sur le chemin)
+//          TplateauJeu jeu (Plateau 2 dimensions qui fait le plateau sur lequel est déplacée l'unite)
+//
+// Return = void (les changements se font sur les cordonnees de l'unite)
+//
+// Complexité = Espace = O(1)
+//              Temps = O(n)
+//
+//*************************************************************************************************************//
 
 void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
 {
@@ -340,9 +354,26 @@ void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
 }
 
 
+
+
+//*************************************************************************************************************//
+//
+// Fonction     CaseOccupe
+//
+// Param = int posx (la position dans les lignes de la case qu'on veut tester)
+//          int posy (la position dans les colonnes de la case qu'on veut tester)
+//          TplateauJeu jeu (le tableau 2 dimensions sur lequel on regarde les cases)
+//
+// Return = Bool (Renvoie true si la case est occupée, false sinon. 
+//                Sert principalement dans la fonction DeplacerHorde)
+//
+// Complexité = Espace = O(1)
+//              Temps = O(1)
+//
+//*************************************************************************************************************//
 bool CaseOccupe(int posx, int posy, TplateauJeu jeu)
 {
-    if (jeu[posx][posy] == NULL)
+    if (jeu[posx][posy] != NULL)
     {
         return true;
     }
