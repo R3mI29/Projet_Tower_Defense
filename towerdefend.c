@@ -282,7 +282,7 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 }
 
 
-void DeplacerHorde(Tunite unite, TplateauJeu jeu)
+void DeplacerHorde(Tunite unite, int ** chemin)
 {
     for (int i = 0; i < unite.vitessedeplacement; i++)
     {
