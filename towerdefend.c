@@ -293,7 +293,7 @@ void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
     }
     int vitesse = (int)unite->vitessedeplacement;
     if (etape_actuelle+vitesse > NBCOORDPARCOURS-1)
-    {
+    {        
         unite->posX = chemin[48][0];
         unite->posY = chemin[48][1];
     }

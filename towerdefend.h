@@ -64,6 +64,7 @@ Tunite *creeChevalier(int posx, int posy);
 
 void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu);
 void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
+void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu);
 
 /* fonctions du noyau que vous avez à coder:
 
