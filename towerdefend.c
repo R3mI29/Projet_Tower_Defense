@@ -265,8 +265,8 @@ void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
 
 void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 {
-    TListePlayer cell = malloc(sizeof(struct T_cell)); 
-    cell->pdata = nouvelleUnite; 
+    TListePlayer cell = malloc(sizeof(struct T_cell));
+    cell->pdata = nouvelleUnite;
     cell->suiv = NULL;
     if (*player == NULL)
     {
@@ -282,10 +282,24 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 }
 
 
-void DeplacerHorde(Tunite unite, int ** chemin)
+void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
 {
-    for (int i = 0; i < unite.vitessedeplacement; i++)
+    int etape_actuelle = 0;
+    for (int i = 0; i < NBCOORDPARCOURS; i++) {
+        if (unite->posX == chemin[i][0] && unite->posY == chemin[i][1]) {
+            etape_actuelle = i;
+            break;
+        }
+    }
+    int vitesse = (int)unite->vitessedeplacement;
+    if (etape_actuelle+vitesse > NBCOORDPARCOURS-1)
     {
-           
+        unite->posX = chemin[48][0];
+        unite->posY = chemin[48][1];
+    }
+    else if (etape_actuelle+vitesse <= NBCOORDPARCOURS - 1)
+    {
+        unite->posX = chemin[etape_actuelle + vitesse][0];
+        unite->posY = chemin[etape_actuelle + vitesse][1];
     }
 }
