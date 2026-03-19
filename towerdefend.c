@@ -554,7 +554,38 @@ bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
     return false;
 }
 
+
+
+//*************************************************************************************************************//
+//
+// Fonction     supprimerUnite
+//
+// Param = TListePlayer *player (La liste d'unités du joueur)
+//         Tunite * UniteDetruite (L'unité qui doit être supprimée)
+//
+// Return = void (le changement se fais dans la liste d'unités)
+//
+// Complexité = Espace = O(n)
+//              Temps = O(n)
+//
+//*************************************************************************************************************//
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite)
 {
-    
+    if (*(player) == NULL)
+    {
+        return;
+    }
+    TListePlayer lst = *player;
+    if (lst->pdata == UniteDetruite)
+    {
+        *lst = *(lst)->suiv;
+        return;
+    }
+    while (lst->pdata != UniteDetruite)
+    {   
+        *lst = *(lst)->suiv;    
+    }
+    TListePlayer temp = lst->suiv;
+    lst->suiv = temp->suiv;
+    free(temp);
 }
