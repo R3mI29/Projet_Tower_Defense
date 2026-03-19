@@ -553,3 +553,8 @@ bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
     }
     return false;
 }
+
+void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite)
+{
+    
+}

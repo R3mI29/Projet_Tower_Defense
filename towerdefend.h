@@ -70,10 +70,11 @@ bool tourRoiDetruite(TListePlayer player);
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante);
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
+void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite);
 
 /* fonctions du noyau que vous avez à coder:
 Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
-Void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite);
+
 */
     
 #endif // TOWERDEFEND_H_INCLUDED
