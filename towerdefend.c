@@ -250,6 +250,22 @@ Tunite * creeGargouille(int posx, int posy)
     return nouv;
 }
 
+
+
+
+//*************************************************************************************************************//
+//
+// Fonction     PositionnePlayerOnPlateau
+//
+// Param =  TplateauJeu * jeu (Plateau de jeu (tableau 2 dimensions de Tunite) sur lequel on regarde où on place l'unité.)
+//          TListePlayer * player (La liste d'unités dans laquelle on veut ajouter l'unité.)
+//
+// Return = void (les changements se font dans la liste du joueur)
+//
+// Complexité = Espace = O(1)
+//              Temps = O(n)
+//
+//*************************************************************************************************************//
 void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
 {
     TListePlayer current = player;
@@ -264,6 +280,20 @@ void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu)
 }
 
 
+
+//*************************************************************************************************************//
+//
+// Fonction     AjouterUnite
+//
+// Param = Tunite * nouvelleUnite (Pointeur sur l'unite que l'on veut ajouter)
+//         TListePlayer * player (La liste d'unités dans laquelle on veut ajouter l'unité.)
+//
+// Return = void (les changements se font dans la liste du joueur)
+//
+// Complexité = Espace = O(1)
+//              Temps = O(n)
+//
+//*************************************************************************************************************//
 void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 {
     TListePlayer cell = malloc(sizeof(struct T_cell));
@@ -287,8 +317,8 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 // Fonction     DeplacerHorde
 //
 // Param = Tunite * unite (Pointeur sur l'unite que l'on veut deplacer)
-//          int ** chemin (Un tableau 2 dimnesions ou sont les cordonnees des cases sur le chemin)
-//          TplateauJeu jeu (Plateau 2 dimensions qui fait le plateau sur lequel est déplacée l'unite)
+//         int ** chemin (Un tableau 2 dimnesions ou sont les cordonnees des cases sur le chemin)
+//         TplateauJeu jeu (Plateau 2 dimensions qui fait le plateau sur lequel est déplacée l'unite)
 //
 // Return = void (les changements se font sur les cordonnees de l'unite)
 //
@@ -361,8 +391,8 @@ void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
 // Fonction     CaseOccupe
 //
 // Param = int posx (la position dans les lignes de la case qu'on veut tester)
-//          int posy (la position dans les colonnes de la case qu'on veut tester)
-//          TplateauJeu jeu (le tableau 2 dimensions sur lequel on regarde les cases)
+//         int posy (la position dans les colonnes de la case qu'on veut tester)
+//         TplateauJeu jeu (le tableau 2 dimensions sur lequel on regarde les cases)
 //
 // Return = Bool (Renvoie true si la case est occupée, false sinon. 
 //                Sert principalement dans la fonction DeplacerHorde)
@@ -416,7 +446,19 @@ bool tourRoiDetruite(TListePlayer player)
 }
 
 
-
+//*************************************************************************************************************//
+//
+// Fonction     quiEstAPortee
+//
+// Param = Tunite * UniteAttaquante (L'unite pour laquelle on regarde si des cibles sont trouvées.)
+//         TplateauJeu jeu (Plateau de jeu (tableau 2 dimensions de Tunite) sur lequel on regarde si des cibles sont trouvées.)
+//
+// Return = TListePlayer (La liste des cibles qu'il est possible d'attaquer pour l'unite choisi.)
+//
+// Complexité = Espace = O(n)
+//              Temps = O(n²)
+//
+//*************************************************************************************************************//
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
 {
     TListePlayer lst = NULL;
@@ -427,16 +469,36 @@ TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
     {
         for (int z = (-1)*porte; z <= porte; z++)
         {
-            Tunite *current = jeu[posx - i][posy - z];
-            if ((current != NULL) && (current->nom != tourAir && current->nom != tourSol && current->nom != tourRoi) && (ciblable(UniteAttaquante, current)) && EstEnemi(UniteAttaquante, current))
+            int cibleX = posx - i;
+            int cibleY = posy - z;
+            if (cibleX >= 0 && cibleX <LARGEURJEU && cibleY >= 0 && cibleY < HAUTEURJEU) 
             {
-                AjouterUnite(&lst,current);
+                Tunite *current = jeu[cibleX][cibleY];
+                if ((current != NULL) && (ciblable(UniteAttaquante, current)) && EstEnemi(UniteAttaquante, current))
+                {
+                    AjouterUnite(&lst, current);
+                }
             }
         }
     }
     return lst;
 }
 
+
+//*************************************************************************************************************//
+//
+// Fonction     ciblable
+//
+// Param = Tunite * UniteAttaquante (L'unite pour laquelle on regarde si des cibles sont trouvées.)
+//         Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
+//
+// Return = bool (renvoie true si l'unite attanquante peut attaquer l'unite cible, false sinon. Teste si elles peuvent se cibler avec leur capacite.)
+//               (Est une sous fonction de quiEstAPortee)
+//
+// Complexité = Espace = O(1)
+//              Temps = O(1)
+//
+//*************************************************************************************************************//
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
 {
     if ((uniteAttaquante->cibleAttaquable == sol || uniteAttaquante->cibleAttaquable == solEtAir) && unitecible->maposition == sol)
@@ -453,6 +515,23 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
     }
 }
 
+
+
+
+//*************************************************************************************************************//
+//
+// Fonction     EstEnemi
+//
+// Param = Tunite * UniteAttaquante (L'unite pour laquelle on regarde si des cibles sont trouvées.)
+//         Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
+//
+// Return = bool (renvoie true si l'unite attanquante peut attaquer l'unite cible, false sinon. Test si elles sont dans le même camp)
+//               (Est une sous fonction de quiEstAPortee)
+//
+// Complexité = Espace = O(1)
+//              Temps = O(1)
+//
+//*************************************************************************************************************//
 bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
 {
     int temp = 0;   //Si il vaut 1 l'attanquant est du roi sinon il vaut 2
@@ -466,10 +545,11 @@ bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
     }
     else if (uniteAttaquante->nom != tourAir && uniteAttaquante->nom != tourRoi && uniteAttaquante->nom != tourSol)
     {
-        if (uniteCible->nom == tourAir || uniteCible->nom == tourRoi || uniteCible->nom == tourSol)
+        if (uniteCible->nom == tourRoi)
         {
             return true;
         }
         return false;
-    }    
+    }
+    return false;
 }

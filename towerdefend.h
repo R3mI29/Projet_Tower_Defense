@@ -69,6 +69,7 @@ bool CaseOccupe(int posx, int posy, TplateauJeu jeu);
 bool tourRoiDetruite(TListePlayer player);
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante);
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
+bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 
 /* fonctions du noyau que vous avez à coder:
 Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
