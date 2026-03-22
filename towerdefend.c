@@ -560,32 +560,44 @@ bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
 //
 // Fonction     supprimerUnite
 //
+//
 // Param = TListePlayer *player (La liste d'unités du joueur)
+//
 //         Tunite * UniteDetruite (L'unité qui doit être supprimée)
 //
+//         TplateauJeu jeu (le plateau qui est affiché par l'interface graphique)
+//
+//
 // Return = void (le changement se fais dans la liste d'unités)
+//
 //
 // Complexité = Espace = O(n)
 //              Temps = O(n)
 //
 //*************************************************************************************************************//
-void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite)
+void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu)
 {
-    if (*(player) == NULL)
+    if (player == NULL || *player == NULL || UniteDetruite == NULL)
     {
+        return;
+    }
+    jeu[UniteDetruite->posX][UniteDetruite->posY] = NULL;
+    if ((*player)->pdata == UniteDetruite)
+    {
+        TListePlayer temp = *player;
+        *player = (*player)->suiv;
+        free(temp);
         return;
     }
     TListePlayer lst = *player;
-    if (lst->pdata == UniteDetruite)
-    {
-        *lst = *(lst)->suiv;
-        return;
-    }
-    while (lst->pdata != UniteDetruite)
+    while (lst->suiv != NULL && lst->suiv->pdata != UniteDetruite)
     {   
-        *lst = *(lst)->suiv;    
+        lst = lst->suiv;
     }
-    TListePlayer temp = lst->suiv;
-    lst->suiv = temp->suiv;
-    free(temp);
+    if (lst->suiv != NULL)
+    {
+        TListePlayer temp = lst->suiv;
+        lst->suiv = temp->suiv;
+        free(temp);
+    }
 }

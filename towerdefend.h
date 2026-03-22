@@ -62,6 +62,8 @@ Tunite *creeGargouille(int posx, int posy);
 Tunite *creeDragon(int posx, int posy);
 Tunite *creeChevalier(int posx, int posy);
 
+
+/*  Kernel  */
 void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu);
 void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
 void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu);
@@ -70,11 +72,10 @@ bool tourRoiDetruite(TListePlayer player);
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante);
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
-void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite);
+void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
 
 /* fonctions du noyau que vous avez à coder:
 Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
-
 */
     
 #endif // TOWERDEFEND_H_INCLUDED
