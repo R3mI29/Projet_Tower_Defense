@@ -489,14 +489,18 @@ TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
 //
 // Fonction     ciblable
 //
+//
 // Param = Tunite * UniteAttaquante (L'unite pour laquelle on regarde si des cibles sont trouvées.)
 //         Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
+//
 //
 // Return = bool (renvoie true si l'unite attanquante peut attaquer l'unite cible, false sinon. Teste si elles peuvent se cibler avec leur capacite.)
 //               (Est une sous fonction de quiEstAPortee)
 //
+//
 // Complexité = Espace = O(1)
 //              Temps = O(1)
+//
 //
 //*************************************************************************************************************//
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
@@ -524,9 +528,7 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
 //
 //
 // Param = Tunite * UniteAttaquante (L'unite pour laquelle on regarde si des cibles sont trouvées.)
-//
-//
-//          Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
+//         Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
 //
 //
 // Return = bool (renvoie true si l'unite attanquante peut attaquer l'unite cible, false sinon. Test si elles sont dans le même camp)
@@ -567,9 +569,7 @@ bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
 //
 //
 // Param = TListePlayer *player (La liste d'unités du joueur)
-//
 //         Tunite * UniteDetruite (L'unité qui doit être supprimée)
-//
 //         TplateauJeu jeu (le plateau qui est affiché par l'interface graphique)
 //
 //
@@ -613,11 +613,8 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 // Fonction     combat
 //
 //
-// Param = SDL_Surface * surface 
-//
+// Param = SDL_Surface * surface (Jsp)
 //         Tunite * UniteAttaquante (l'unite qui va  pouvoir attaquer l'autre et lui enlever des pointsDeVie equivalent à ces degats.)
-//
-//
 //         Tunite * UniteCible (L'unite qui va etre ciblee par l'attaquante et qui va perdre des pointsDeVie.) 
 //
 //
@@ -627,6 +624,8 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 // Complexité = Espace = O(1)
 //              Temps = O(1)
 //
+//*************************************************************************************************************//
+//                                                  A finir
 //*************************************************************************************************************//
 void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible)
 {
