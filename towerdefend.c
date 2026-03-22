@@ -635,3 +635,5 @@ void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible
     }
     dessineAttaque(surface, UniteAttaquante, UniteCible);
 }
+
+printf();
