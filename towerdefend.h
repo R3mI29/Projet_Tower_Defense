@@ -73,9 +73,6 @@ TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante);
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
-
-/* fonctions du noyau que vous avez à coder:
-Void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
-*/
+void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
     
 #endif // TOWERDEFEND_H_INCLUDED

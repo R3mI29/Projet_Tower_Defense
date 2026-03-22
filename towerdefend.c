@@ -522,11 +522,16 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
 //
 // Fonction     EstEnemi
 //
+//
 // Param = Tunite * UniteAttaquante (L'unite pour laquelle on regarde si des cibles sont trouvées.)
-//         Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
+//
+//
+//          Tunite * unitecible (l'unite que l'on a trouvée dans la zone de ciblage de l'unite attanquante.)
+//
 //
 // Return = bool (renvoie true si l'unite attanquante peut attaquer l'unite cible, false sinon. Test si elles sont dans le même camp)
 //               (Est une sous fonction de quiEstAPortee)
+//
 //
 // Complexité = Espace = O(1)
 //              Temps = O(1)
@@ -600,4 +605,34 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
         lst->suiv = temp->suiv;
         free(temp);
     }
+}
+
+
+//*************************************************************************************************************//
+//
+// Fonction     combat
+//
+//
+// Param = SDL_Surface * surface 
+//
+//         Tunite * UniteAttaquante (l'unite qui va  pouvoir attaquer l'autre et lui enlever des pointsDeVie equivalent à ces degats.)
+//
+//
+//         Tunite * UniteCible (L'unite qui va etre ciblee par l'attaquante et qui va perdre des pointsDeVie.) 
+//
+//
+// Return = void (le changement se fais dans l'unite cible)
+//
+//
+// Complexité = Espace = O(1)
+//              Temps = O(1)
+//
+//*************************************************************************************************************//
+void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible)
+{
+    if (EstEnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
+    {
+        UniteCible->pointsDeVie -= UniteAttaquante->degats;
+    }
+    dessineAttaque(surface, UniteAttaquante, UniteCible);
 }
