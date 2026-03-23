@@ -1,0 +1,1 @@
+clang *.c -o towerdefend $(sdl2-config --cflags --libs)
