@@ -83,7 +83,6 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU
 
-
                 // utiliser dessineAttaque dans votre fonction de combat va vous obliger � ajouter un argument li� � la SDL
                 // -> SDL_Surface *surface
                 // regarder le prototype de dessineAttaque dans maSDL.c pour (mieux) comprendre
@@ -171,7 +170,6 @@ int main(int argc, char* argv[])
     {
         fprintf(stdout,"échec de chargement du sprite (%s)\n",SDL_GetError());
     }
-
     SDL_DestroyWindow(pWindow);
     SDL_Quit();
     freeChemin(tabParcours);

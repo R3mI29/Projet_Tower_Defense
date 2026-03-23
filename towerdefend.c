@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include "SDL.h"
 #include "maSDL.h"
 #include "towerdefend.h"
@@ -30,11 +31,11 @@ void initPlateauAvecNULL(TplateauJeu jeu,int largeur, int hauteur){
 /*
 void ecritCheminVersleHaut  : permet d'initilaiser le tab chemin de distance cases (avec des coord x y) dans une direction, � partir d'un point x y donn�
 
-int **chemin  : tab de coordonn�es x y du chemin
-int *ichemin  : indice de la case du chemin d'o� on part
-int *xdepart, int *ydepart : valeur en x y de d�part pouri la premiere case
-int distance  : distance sur laquelle on va �crire des coordonn�es dans le tab chemin
-int *distanceMaxRestante : securit� pour ne pas sortir de la plage d'indice de chemin
+int **chemin  : tab de coordonnées x y du chemin
+int *ichemin  : indice de la case du chemin d'où on part
+int *xdepart, int *ydepart : valeur en x y de départ pouri la premiere case
+int distance  : distance sur laquelle on va écrire des coordonnées dans le tab chemin
+int *distanceMaxRestante : securité pour ne pas sortir de la plage d'indice de chemin
 */
 void ecritCheminVersleHaut(int **chemin, int *ichemin, int *xdepart, int *ydepart, int distance, int *distanceMaxRestante){
     if ((*distanceMaxRestante - distance)>=0){
@@ -75,29 +76,50 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
     else printf("erreur longueur chemin\n");
 }
 
-int **initChemin(){
+int **initChemin()
+{
     int **chemin = (int**)malloc(sizeof(int*)*NBCOORDPARCOURS);
-
-    for (int j=0;j<NBCOORDPARCOURS;j++){
-        chemin[j] = (int*)malloc(sizeof(int)*2);  //2 cases :indice 0 pour la coord en X, indice 1 pour la coord en Y
+    for (int j=0;j<NBCOORDPARCOURS;j++)
+    {
+        chemin[j] = (int*)malloc(sizeof(int)*2);
     }
-
-    int ydepart = 18;  //et non 19
-    int xdepart = 5;  //5 = milieu de la fenetre de 11 de largeur (0-10)
-    int i = 0;  //parcourt les i cases du chemin
+    int ydepart = 18;
+    int xdepart = 5;
+    int i = 0;
     int distanceMaxRestante = NBCOORDPARCOURS;
-
-    ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
-    ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, 5, &distanceMaxRestante);
-    ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
-    ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
-
-    return chemin;  //tab2D contenant des pointeurs
+    while (distanceMaxRestante > 0)    
+    {
+        srand(time(NULL));
+        int var = rand()%3;
+        if (var == 0)
+        {
+            int val = rand()% distanceMaxRestante + 1 ;
+            distanceMaxRestante -=val;
+            ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);   
+        }
+        else if(var == 1)
+        {
+            int val = rand()% distanceMaxRestante + 1 ;
+            distanceMaxRestante -=val;
+            ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+        }
+        else if(var == 2)
+        {
+            int val = rand()% distanceMaxRestante + 1;
+            distanceMaxRestante -=val;
+            ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+        }
+    }
+    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
+    // ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
+    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
+    // ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, 5, &distanceMaxRestante);
+    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
+    // ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
+    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
+    // ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
+    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
+    return chemin;
 }
 
 void afficheCoordonneesParcours(int **chemin, int nbcoord){
@@ -475,7 +497,7 @@ TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
             if (cibleX >= 0 && cibleX <LARGEURJEU && cibleY >= 0 && cibleY < HAUTEURJEU) 
             {
                 Tunite *current = jeu[cibleX][cibleY];
-                if ((current != NULL) && (ciblable(UniteAttaquante, current)) && EstEnemi(UniteAttaquante, current))
+                if ((current != NULL) && (ciblable(UniteAttaquante, current)) && EstEnnemi(UniteAttaquante, current))
                 {
                     AjouterUnite(&lst, current);
                 }
@@ -540,7 +562,7 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible)
 //              Temps = O(1)
 //
 //*************************************************************************************************************//
-bool EstEnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
+bool EstEnnemi(Tunite * uniteAttaquante, Tunite * uniteCible)
 {
     int temp = 0;   //Si il vaut 1 l'attanquant est du roi sinon il vaut 2
     if (uniteAttaquante->nom == tourAir || uniteAttaquante->nom == tourSol || uniteAttaquante->nom == tourRoi)
@@ -630,7 +652,7 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 //*************************************************************************************************************//
 void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible)
 {
-    if (EstEnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
+    if (EstEnnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
     {
         UniteCible->pointsDeVie -= UniteAttaquante->degats;
     }

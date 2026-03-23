@@ -109,21 +109,6 @@ void dessineAttaque(SDL_Surface *surface, Tunite *attaquant, Tunite *cible ){
     int y1 = (attaquant->posY+1)*40-20;
     int x2 = (cible->posX+1)*40-20;
     int y2 = (cible->posY+1)*40-20;
-
-    /*
-    //pas assez fluide
-    int distX = (x2-x1)/10;
-    int distY = (y2-y1)/10;
-
-    int x = x1, y = y1;
-
-    for (int i=0; i<10 ;i++){
-        line(surface, x, y, x+distX, y+distY, 0xFF0000);
-        x+=distX;  //ou x=x+distX
-        y+=distY;
-        SDL_Delay(150);
-    }
-    */
     line(surface, x1, y1, x2, y2, 0xFF0000);
     SDL_Delay(250);
 }
