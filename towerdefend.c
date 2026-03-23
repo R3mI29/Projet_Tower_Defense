@@ -76,6 +76,7 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
     else printf("erreur longueur chemin\n");
 }
 
+
 int **initChemin()
 {
     srand(time(NULL));
@@ -84,52 +85,74 @@ int **initChemin()
     {
         chemin[j] = (int*)malloc(sizeof(int)*2);
     }
+    
     int ydepart = 18;
     int xdepart = 5;
     int i = 0;
+    int test = 1;
     int distanceMaxRestante = NBCOORDPARCOURS;
-    while (distanceMaxRestante > 0)    
+    while (distanceMaxRestante > 0)
     {
-        int var = rand()%3;
+        int var;
+        if (test == 1)
+        {
+            var = 0;
+        }
+        else 
+        {
+            var = rand() % 3;
+        }
         if (var == 0)
         {
-            int val = rand()% distanceMaxRestante + 1 ;
-            if (ydepart - val >= 0 )
+            int val = rand() % distanceMaxRestante + 1;
+            if (ydepart - val < 1) {
+                val = ydepart - 1; 
+            }
+            if (val > 0)
             {
-                distanceMaxRestante -=val;
                 ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+                distanceMaxRestante -= val;
+                test = 0;
+            }
+            else 
+            {
+                test = 0;
             }
         }
         else if(var == 1)
         {
-            int val = rand()% distanceMaxRestante + 1 ;
-            if (xdepart - val >= 0 && xdepart + val <= 11)
+            int val = rand() % distanceMaxRestante + 1;
+            if (xdepart + val > 11) {
+                val = 11 - xdepart;
+            }
+            
+            if (val > 0)
             {
-                distanceMaxRestante -=val;
                 ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+                distanceMaxRestante -= val;
+                test = 1;
             }
         }
         else if(var == 2)
         {
-            int val = rand()% distanceMaxRestante + 1 ;
-            if (xdepart - val >= 0 && xdepart + val <= 11)
+            int val = rand() % distanceMaxRestante + 1;
+            if (xdepart - val < 0) {
+                val = xdepart;
+            }
+            
+            if (val > 0)
             {
-                distanceMaxRestante -=val;
                 ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+                distanceMaxRestante -= val;
+                test = 1;
             }
         }
     }
-    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
-    // ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    // ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, 5, &distanceMaxRestante);
-    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    // ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
-    // ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, 4, &distanceMaxRestante);
-    // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
     return chemin;
 }
+
+
+
 
 void afficheCoordonneesParcours(int **chemin, int nbcoord){
     printf("Liste coordonnees: ");
