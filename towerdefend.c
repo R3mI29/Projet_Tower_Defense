@@ -78,6 +78,7 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
 
 int **initChemin()
 {
+    srand(time(NULL));
     int **chemin = (int**)malloc(sizeof(int*)*NBCOORDPARCOURS);
     for (int j=0;j<NBCOORDPARCOURS;j++)
     {
@@ -89,25 +90,33 @@ int **initChemin()
     int distanceMaxRestante = NBCOORDPARCOURS;
     while (distanceMaxRestante > 0)    
     {
-        srand(time(NULL));
         int var = rand()%3;
         if (var == 0)
         {
             int val = rand()% distanceMaxRestante + 1 ;
-            distanceMaxRestante -=val;
-            ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);   
+            if (ydepart - val >= 0 )
+            {
+                distanceMaxRestante -=val;
+                ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+            }
         }
         else if(var == 1)
         {
             int val = rand()% distanceMaxRestante + 1 ;
-            distanceMaxRestante -=val;
-            ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+            if (xdepart - val >= 0 && xdepart + val <= 11)
+            {
+                distanceMaxRestante -=val;
+                ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+            }
         }
         else if(var == 2)
         {
-            int val = rand()% distanceMaxRestante + 1;
-            distanceMaxRestante -=val;
-            ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+            int val = rand()% distanceMaxRestante + 1 ;
+            if (xdepart - val >= 0 && xdepart + val <= 11)
+            {
+                distanceMaxRestante -=val;
+                ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+            }
         }
     }
     // ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, 3, &distanceMaxRestante);
