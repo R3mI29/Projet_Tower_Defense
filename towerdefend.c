@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "SDL.h"
+#include "maSDL.h"
 #include "towerdefend.h"
 
 
@@ -628,6 +629,7 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 //              Temps = O(1)
 //
 //*************************************************************************************************************//
+
 void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible)
 {
     if (EstEnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
@@ -636,3 +638,4 @@ void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible
     }
     dessineAttaque(surface, UniteAttaquante, UniteCible);
 }
+printf("COucou");d

@@ -1,6 +1,6 @@
 #ifndef TOWERDEFEND_H_INCLUDED
 #define TOWERDEFEND_H_INCLUDED
-
+#include <stdbool.h>
 #define LARGEURJEU 11
 #define HAUTEURJEU 19
 #define NBCOORDPARCOURS 34
