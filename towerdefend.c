@@ -85,7 +85,6 @@ int **initChemin()
     {
         chemin[j] = (int*)malloc(sizeof(int)*2);
     }
-    
     int ydepart = 18;
     int xdepart = 5;
     int i = 0;
@@ -98,14 +97,16 @@ int **initChemin()
         {
             var = 0;
         }
-        else 
+        else
         {
             var = rand() % 3;
         }
         if (var == 0)
         {
             int val = rand() % distanceMaxRestante + 1;
-            if (ydepart - val < 1) {
+            val = (int)val/2;                             //teste avec la taille des chemin /2               
+            if (ydepart - val < 1) 
+            {
                 val = ydepart - 1; 
             }
             if (val > 0)
@@ -114,14 +115,11 @@ int **initChemin()
                 distanceMaxRestante -= val;
                 test = 0;
             }
-            else 
-            {
-                test = 0;
-            }
         }
         else if(var == 1)
         {
             int val = rand() % distanceMaxRestante + 1;
+            val = (int)val/2;                               //teste avec la taille des chemin /2
             if (xdepart + val > 11) {
                 val = 11 - xdepart;
             }
@@ -136,6 +134,7 @@ int **initChemin()
         else if(var == 2)
         {
             int val = rand() % distanceMaxRestante + 1;
+            val = (int)val/2;                               //teste avec la taille des chemin /2
             if (xdepart - val < 0) {
                 val = xdepart;
             }
