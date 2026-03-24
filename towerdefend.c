@@ -76,7 +76,18 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
     else printf("erreur longueur chemin\n");
 }
 
-
+//*************************************************************************************************************//
+//
+// Fonction     initChemin
+//
+// Param = NULL
+//
+// Return =  int ** (liste des cases du chemin qui sont faites de manière aléatoire)
+//
+// Complexité = Espace = O(1) // O(n)
+//              Temps = O(n)
+//
+//*************************************************************************************************************//
 int **initChemin()
 {
     srand(time(NULL));
