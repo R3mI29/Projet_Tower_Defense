@@ -690,3 +690,53 @@ void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible
     }
     dessineAttaque(surface, UniteAttaquante, UniteCible);
 }
+
+
+//*************************************************************************************************************//
+//
+// Fonction     EstSurChemin
+//
+//
+// Param = int* coord
+//         int** chemin
+//
+//
+//
+// Return = bool
+//
+//
+// Complexité =
+//
+//
+//*************************************************************************************************************//
+
+bool EstSurChemin(int* coord, int** chemin){
+    for(int k = 0; k < NBCOORDPARCOURS; k++){
+        if (chemin[k] == coord){
+            return true;
+        }
+    }
+    return false;
+}
+
+//*************************************************************************************************************//
+//
+// Fonction     CalculeScoreEmplacement
+//
+//
+// Param = T_unite
+//
+//
+//
+// Return = void (le changement se fais dans l'unite )
+//
+//
+// Complexité =
+//
+//
+//*************************************************************************************************************//
+
+void CalculeScoreEmplacement(Tunite emplacement){
+
+
+}

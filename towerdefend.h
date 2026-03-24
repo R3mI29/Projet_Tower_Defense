@@ -74,5 +74,7 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
 void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible);  //qui utilise dessineAttaque (de maSDL.h)
-    
+
+bool EstSurChemin(int* coord, int** chemin);
+void CalculeScoreEmplacement(Tunite emplacement);
 #endif // TOWERDEFEND_H_INCLUDED
