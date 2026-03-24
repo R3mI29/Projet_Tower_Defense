@@ -84,7 +84,7 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
 //
 // Return =  int ** (liste des cases du chemin qui sont faites de manière aléatoire)
 //
-// Complexité = Espace = O(1) // O(n)
+// Complexité = Espace = O(n)
 //              Temps = O(n)
 //
 //*************************************************************************************************************//
@@ -101,21 +101,22 @@ int **initChemin()
     int i = 0;
     int test = 1;
     int distanceMaxRestante = NBCOORDPARCOURS;
-    while (distanceMaxRestante > 0)
+    while (distanceMaxRestante > 0 && ydepart > 1)
     {
         int var;
-        if (test == 1)
-        {
+        if (test == 1) {
             var = 0;
-        }
-        else
-        {
+        } else {
             var = rand() % 3;
         }
-        if (var == 0)
+        if (var == 0) 
         {
             int val = rand() % distanceMaxRestante + 1;
-            val = (int)val/2;                             //teste avec la taille des chemin /2               
+            val = val / 4; 
+            if (val == 0)
+            {
+                val = 1; 
+            }
             if (ydepart - val < 1) 
             {
                 val = ydepart - 1; 
@@ -126,15 +127,23 @@ int **initChemin()
                 distanceMaxRestante -= val;
                 test = 0;
             }
+            else 
+            {
+                test = 0; 
+            }
         }
         else if(var == 1)
         {
             int val = rand() % distanceMaxRestante + 1;
-            val = (int)val/2;                               //teste avec la taille des chemin /2
-            if (xdepart + val > 11) {
+            val = val / 4;
+            if (val == 0) 
+            {
+                val = 1;
+            }
+            if (xdepart + val > 10) 
+            {
                 val = 11 - xdepart;
             }
-            
             if (val > 0)
             {
                 ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
@@ -145,7 +154,11 @@ int **initChemin()
         else if(var == 2)
         {
             int val = rand() % distanceMaxRestante + 1;
-            val = (int)val/2;                               //teste avec la taille des chemin /2
+            val = val / 4;
+            if (val == 0)
+            {
+                val = 1; 
+            }
             if (xdepart - val < 0) {
                 val = xdepart;
             }
