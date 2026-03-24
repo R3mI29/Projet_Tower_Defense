@@ -680,15 +680,14 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 //              Temps = O(1)
 //
 //*************************************************************************************************************//
-//                                                  A finir
+//                                            On peut faire un appel de dessineAttaque pour dessiner un rayon qui va imager l'attaque
 //*************************************************************************************************************//
-void combat(SDL_Surface *surface , Tunite * UniteAttaquante, Tunite * UniteCible)
+void combat(Tunite * UniteAttaquante, Tunite * UniteCible)
 {
     if (EstEnnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
     {
         UniteCible->pointsDeVie -= UniteAttaquante->degats;
     }
-    dessineAttaque(surface, UniteAttaquante, UniteCible);
 }
 
 
