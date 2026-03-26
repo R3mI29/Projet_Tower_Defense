@@ -66,7 +66,14 @@ int main(int argc, char* argv[])
         /**********************************************************************/
         /*                                                                    */
         /*              DEFINISSEZ/INITIALISER ICI VOS VARIABLES              */
-        /*
+        /*                                                                    */
+
+        TListePlayer listeRoi;
+        int posx = tabParcours[33][0];
+        int posy = tabParcours[33][1];
+        printf("\nLa position x de la tour du roi est %d, et la posistion y est : %d\n", posx, posy);
+        AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));
+        PositionnePlayerOnPlateau(listeRoi, jeu);
         // FIN de vos variables                                               */
         /**********************************************************************/
 

@@ -101,25 +101,23 @@ int **initChemin()
     int i = 0;
     int test = 1;
     int distanceMaxRestante = NBCOORDPARCOURS;
-    while (distanceMaxRestante > 0 && ydepart > 1)
+    while (distanceMaxRestante > 0)
     {
         int var;
-        if (test == 1) {
+        if (test == 1)
+        {
             var = 0;
-        } else {
+        } 
+        else if(test != 1) 
+        {
             var = rand() % 3;
         }
         if (var == 0) 
         {
-            int val = rand() % distanceMaxRestante + 1;
-            val = val / 4; 
-            if (val == 0)
+            int val = rand() % 5;
+            if (val < 2)
             {
-                val = 1; 
-            }
-            if (ydepart - val < 1) 
-            {
-                val = ydepart - 1; 
+                val = 2; 
             }
             if (val > 0)
             {
@@ -127,22 +125,21 @@ int **initChemin()
                 distanceMaxRestante -= val;
                 test = 0;
             }
-            else 
+            else
             {
-                test = 0; 
+                test = 0;
             }
         }
         else if(var == 1)
         {
-            int val = rand() % distanceMaxRestante + 1;
-            val = val / 4;
-            if (val == 0) 
+            int val = rand() % 7;
+            if (val <= 0) 
             {
                 val = 1;
             }
             if (xdepart + val > 10) 
             {
-                val = 11 - xdepart;
+                val = 10 - xdepart;
             }
             if (val > 0)
             {
@@ -153,16 +150,14 @@ int **initChemin()
         }
         else if(var == 2)
         {
-            int val = rand() % distanceMaxRestante + 1;
-            val = val / 4;
-            if (val == 0)
+            int val = rand() % 7 + 1;
+            if (val <= 0)
             {
                 val = 1; 
             }
             if (xdepart - val < 0) {
                 val = xdepart;
             }
-            
             if (val > 0)
             {
                 ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
