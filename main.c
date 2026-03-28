@@ -44,9 +44,9 @@ int main(int argc, char* argv[])
     // SAUF pour l'Eau, l''herbe et le pont qui apparaitront en l absence d'unité (NULL dans le plateau) et en foction de certains indices x,y définissant le chemin central
     SDL_Surface* TabSprite[11]={pSpriteTourSol,pSpriteTourAir,pSpriteTourRoi,pSpriteArcher,pSpriteChevalier,pSpriteDragon,pSpriteGargouille,pSpriteEau,pSpriteHerbe,pSpritePont,pSpriteTerre};
 
-    Tchemin tabParcours=initChemin();  //tabParcours est un tableau de NBCOORDPARCOURS cases, chacune contenant un tableau à 2 cases (indice 0 pour X, indice 1 pour Y)
+    Tchemin tabParcours=initChemin();
 
-    if ( pSpriteTourSol )  //si le permier sprite a bien �t� charg�, on suppose que les autres aussi
+    if ( pSpriteTourSol )
     {
         TplateauJeu jeu = AlloueTab2D(LARGEURJEU,HAUTEURJEU);
         initPlateauAvecNULL(jeu,LARGEURJEU,HAUTEURJEU);
@@ -58,10 +58,10 @@ int main(int argc, char* argv[])
         maj_fenetre(pWindow);
 
 
-        //A COMMENTER quand vous en aurez assez de cliquer sur ces popups ^^
 
-        //message("Welcome in TowerDfend","Ceci est un point de depart pour votre future interface de votre jeu TowerDefend");
-        //message("et fin","ECHAP->quitter, S/C ET D/V les gerer les sauvegardes");
+        message("Welcome in TowerDfend","Ceci est un point de depart pour votre future interface de votre jeu TowerDefend");
+        message("et fin","ECHAP->quitter, S/C ET D/V les gerer les sauvegardes");
+
 
         /**********************************************************************/
         /*                                                                    */
@@ -75,53 +75,74 @@ int main(int argc, char* argv[])
         int posx = tabParcours.chemin[tabParcours.taille-1][0];
         int posy = tabParcours.chemin[tabParcours.taille-1][1];
         AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));
+        AjouterUnite(&listeRoi, creeTourSol(5, 7));
         PositionnePlayerOnPlateau(listeRoi, jeu);
 
-        /*Test Horde*/
-        AjouterUnite(&listHorde, creeDragon(tabParcours.chemin[0][0], tabParcours.chemin[0][1]));
-        PositionnePlayerOnPlateau(listHorde, jeu);
         // FIN de vos variables                                               */
         /**********************************************************************/
 
-        // boucle principale du jeu
+
         int cont = 1;
-        TListePlayer temp = listHorde;
-        while ( cont != 0 ){   //VOUS DEVEZ GERER (DETECTER) LA FIN DU JEU -> tourRoiDetruite
-                SDL_PumpEvents(); //do events
+        while ( cont != 0 )
+        {
+                TListePlayer tempHorde = listHorde;
+                TListePlayer tempRoi = listeRoi;
+                SDL_PumpEvents();
                 efface_fenetre(pWinSurf);
                 prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
 
                 /***********************************************************************/
                 /*                                                                     */
                 /*                                                                     */
-                //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU
-
-                // utiliser dessineAttaque dans votre fonction de combat va vous obliger � ajouter un argument li� � la SDL
-                // -> SDL_Surface *surface
-                // regarder le prototype de dessineAttaque dans maSDL.c pour (mieux) comprendre
-                if (tourRoiDetruite(listeRoi))
+                //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
+                CreationUniteAleaHorde(listHorde, tabParcours.chemin);
+                CreationUniteAleaRoi(listeRoi, tabParcours.chemin);
+                bool tour = false;
+                while (!tour)
                 {
-                        message("Fin de la partie","Vous avez perdu");
-                        cont = 0;
-                        break;
+                        if (tempRoi->suiv != NULL)
+                        {
+                                TListePlayer cibleRoi = quiEstAPortee(jeu, tempRoi->pdata);
+                                if (cibleRoi != NULL)
+                                {
+                                        combat(tempRoi->pdata, cibleRoi->pdata);
+                                }
+                                if (tempRoi->suiv != NULL)
+                                {
+                                        tempRoi = tempRoi->suiv;
+                                }
+                                if (tempRoi->suiv == NULL)
+                                {
+                                        tempRoi = NULL;
+                                }
+                        }
+                        if (tempHorde->suiv != NULL)
+                        {
+                                retirerAffichage(tempHorde->pdata, jeu);
+                                DeplacerHorde(tempHorde->pdata, tabParcours.chemin, jeu);
+                                TListePlayer cibleHorde = quiEstAPortee(jeu, tempHorde->pdata);
+                                if (cibleHorde != NULL)
+                                {
+                                        combat(tempHorde->pdata, cibleHorde->pdata);
+                                }
+                                PositionnePlayerOnPlateau(tempHorde, jeu);
+                                if (tempHorde->suiv != NULL)
+                                {
+                                        tempHorde = tempHorde->suiv;
+                                }
+                                if (tempHorde->suiv == NULL)
+                                {
+                                        tempHorde = NULL;
+                                }
+                        }                      
                 }
-                retirerAffichage(temp->pdata, jeu);
-                DeplacerHorde(temp->pdata, tabParcours.chemin, jeu);
-                
-                TListePlayer cibles = quiEstAPortee(jeu, temp->pdata);
-                if (cibles != NULL)
-                {
-                        combat(temp->pdata,cibles->pdata);
-                }
-                PositionnePlayerOnPlateau(temp, jeu);
                 /*                                                                     */
                 /*                                                                     */
-                // FIN DE VOS APPELS
+                // FIN DE VOS APPELS                                                   */
                 /***********************************************************************/
-                //affichage du jeu à chaque tour
 
                 maj_fenetre(pWindow);
-                SDL_Delay(150);  //valeur du délai à modifier éventuellement
+                SDL_Delay(300);  //valeur du délai à modifier éventuellement
 
 
                 //LECTURE DE CERTAINES TOUCHES POUR LANCER LES RESTAURATIONS ET SAUVEGARDES
@@ -179,7 +200,6 @@ int main(int argc, char* argv[])
                 }
 
         }
-        //fin boucle du jeu
 
         SDL_FreeSurface(pSpriteTourSol); // Lib�ration de la ressource occup�e par le sprite
         SDL_FreeSurface(pSpriteTourAir);

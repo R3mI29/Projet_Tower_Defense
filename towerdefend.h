@@ -6,6 +6,8 @@
 #define NBCOORDPARCOURS 34
 #define X 0
 #define Y 1
+#define PROBHORDE 25
+#define PROBROI 20
 
 typedef enum{tourSol, tourAir, tourRoi, archer, chevalier, dragon, gargouille} TuniteDuJeu;
 typedef enum{sol, solEtAir, air } Tcible;
@@ -82,4 +84,6 @@ void combat(Tunite * UniteAttaquante, Tunite * UniteCible);
 void retirerAffichage(Tunite * unite, TplateauJeu jeu);
 bool EstSurChemin(int* coord, int** chemin);
 void CalculeScoreEmplacement(Tunite emplacement);
+void CreationUniteAleaRoi(TListePlayer * lst, int ** chemin);
+void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin);
 #endif // TOWERDEFEND_H_INCLUED

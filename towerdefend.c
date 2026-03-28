@@ -425,7 +425,6 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 //              Temps = O(n)
 //
 //*************************************************************************************************************//
-
 void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
 {
     int etape_actuelle = 0;
@@ -436,9 +435,9 @@ void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
             break;
         }
     }
-    if (etape_actuelle+vitesse > NBCOORDPARCOURS-1)
+    if (etape_actuelle+vitesse > NBCOORDPARCOURS )
     {
-        int i = 2;
+        int i = 1;
         int posx = chemin[NBCOORDPARCOURS -i][0];
         int posy = chemin[NBCOORDPARCOURS -i][1];
         if (!CaseOccupe(posx, posy, jeu))
@@ -470,7 +469,7 @@ void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
         }
         else if (CaseOccupe(posx, posy, jeu))
         {
-            while (CaseOccupe(posx, posy, jeu) == false)
+            while (CaseOccupe(posx, posy, jeu) == true)
             {
                 i++;
                 posx = chemin[(etape_actuelle + vitesse) - i][0];
@@ -802,4 +801,84 @@ bool EstSurChemin(int* coord, int** chemin){
 void CalculeScoreEmplacement(Tunite emplacement){
 
 
+}
+
+
+//*************************************************************************************************************//
+//
+// Fonction     CreationUniteAleaHorde
+//
+//
+// Param = TListePlayer (La liste de la horde)
+//
+//
+//
+// Return = void (le changement se fais dans la liste )
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(1)
+//
+//
+//*************************************************************************************************************//
+
+void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin)
+{
+    int Prob = rand()%101;
+    if (Prob <= PROBHORDE)
+    {
+        int uniteAlea = rand()%4;
+        if (uniteAlea == 0)
+        {
+                AjouterUnite(lst, creeArcher(chemin[0][0], chemin[0][1])); //AjouterUnite à une complexite de Temps de O(n)
+        }
+        else if (uniteAlea == 1)
+        {
+                AjouterUnite(lst, creeChevalier(chemin[0][0], chemin[0][1]));
+        }
+        else if (uniteAlea == 2)
+        {
+                AjouterUnite(lst, creeDragon(chemin[0][0], chemin[0][1]));
+        }
+        else if (uniteAlea == 3)
+        {
+                AjouterUnite(lst, creeGargouille(chemin[0][0], chemin[0][1]));
+        }
+    }
+}
+
+
+//*************************************************************************************************************//
+//
+// Fonction     CreationUniteAleaRoi
+//
+//
+// Param = TListePlayer (La liste du Roi)
+//
+//
+//
+// Return = void (le changement se fais dans la liste )
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(1)
+//
+//
+//*************************************************************************************************************//
+
+void CreationUniteAleaRoi(TListePlayer * lst, int ** chemin)
+{
+    int Prob = rand()%101;
+    if (Prob <= PROBROI)
+    {
+        int uniteAlea = rand()%2;
+        if (uniteAlea == 0)
+        {
+                AjouterUnite(lst, creeTourAir()); //AjouterUnite à une complexite de Temps de O(n)
+        }
+        else if (uniteAlea == 1)
+        {
+                AjouterUnite(lst, creeTourSol());
+        }
+    }
 }
