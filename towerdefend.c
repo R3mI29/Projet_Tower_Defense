@@ -724,14 +724,34 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 //              Temps = O(1)
 //
 //*************************************************************************************************************//
-//                                            On peut faire un appel de dessineAttaque pour dessiner un rayon qui va imager l'attaque
-//*************************************************************************************************************//
 void combat(Tunite * UniteAttaquante, Tunite * UniteCible)
 {
     if (EstEnnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
     {
         UniteCible->pointsDeVie -= UniteAttaquante->degats;
     }
+}
+
+
+
+//*************************************************************************************************************//
+//
+// Fonction     retirerAffichage
+//
+//
+// Param = 
+//
+//
+// Return = void (le changement se fais dans le jeu)
+//
+//
+// Complexité = Espace = O(1)
+//              Temps = O(1)
+//
+//*************************************************************************************************************//
+void retirerAffichage(Tunite * unite, TplateauJeu jeu)
+{
+    jeu[unite->posX][unite->posY] = NULL;
 }
 
 

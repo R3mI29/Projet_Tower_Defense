@@ -60,26 +60,32 @@ int main(int argc, char* argv[])
 
         //A COMMENTER quand vous en aurez assez de cliquer sur ces popups ^^
 
-        message("Welcome in TowerDfend","Ceci est un point de depart pour votre future interface de votre jeu TowerDefend");
-        message("et fin","ECHAP->quitter, S/C ET D/V les gerer les sauvegardes");
+        //message("Welcome in TowerDfend","Ceci est un point de depart pour votre future interface de votre jeu TowerDefend");
+        //message("et fin","ECHAP->quitter, S/C ET D/V les gerer les sauvegardes");
 
         /**********************************************************************/
         /*                                                                    */
         /*              DEFINISSEZ/INITIALISER ICI VOS VARIABLES              */
         /*                                                                    */
+        /*Les listes*/
+        TListePlayer listeRoi = NULL;
+        TListePlayer listHorde = NULL;
 
-        TListePlayer listeRoi;
+        /*Tour du Roi*/
         int posx = tabParcours.chemin[tabParcours.taille-1][0];
         int posy = tabParcours.chemin[tabParcours.taille-1][1];
-        printf("\nLa position x de la tour du roi est %d, et la posistion y est : %d\n", posx, posy);
         AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));
         PositionnePlayerOnPlateau(listeRoi, jeu);
+
+        /*Test Horde*/
+        AjouterUnite(&listHorde, creeDragon(tabParcours.chemin[0][0], tabParcours.chemin[0][1]));
+        PositionnePlayerOnPlateau(listHorde, jeu);
         // FIN de vos variables                                               */
         /**********************************************************************/
 
         // boucle principale du jeu
         int cont = 1;
-        int unique = 1;  //a supprimer c'est utiliser pour la démo de dessineAttaque
+        TListePlayer temp = listHorde;
         while ( cont != 0 ){   //VOUS DEVEZ GERER (DETECTER) LA FIN DU JEU -> tourRoiDetruite
                 SDL_PumpEvents(); //do events
                 efface_fenetre(pWinSurf);
@@ -93,15 +99,29 @@ int main(int argc, char* argv[])
                 // utiliser dessineAttaque dans votre fonction de combat va vous obliger � ajouter un argument li� � la SDL
                 // -> SDL_Surface *surface
                 // regarder le prototype de dessineAttaque dans maSDL.c pour (mieux) comprendre
-
+                if (tourRoiDetruite(listeRoi))
+                {
+                        message("Fin de la partie","Vous avez perdu");
+                        cont = 0;
+                        break;
+                }
+                retirerAffichage(temp->pdata, jeu);
+                DeplacerHorde(temp->pdata, tabParcours.chemin, jeu);
+                
+                TListePlayer cibles = quiEstAPortee(jeu, temp->pdata);
+                if (cibles != NULL)
+                {
+                        combat(temp->pdata,cibles->pdata);
+                }
+                PositionnePlayerOnPlateau(temp, jeu);
                 /*                                                                     */
                 /*                                                                     */
                 // FIN DE VOS APPELS
                 /***********************************************************************/
-                //affichage du jeu � chaque tour
+                //affichage du jeu à chaque tour
 
                 maj_fenetre(pWindow);
-                SDL_Delay(150);  //valeur du d�lai � modifier �ventuellement
+                SDL_Delay(150);  //valeur du délai à modifier éventuellement
 
 
                 //LECTURE DE CERTAINES TOUCHES POUR LANCER LES RESTAURATIONS ET SAUVEGARDES

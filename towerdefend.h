@@ -79,7 +79,7 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
 void combat(Tunite * UniteAttaquante, Tunite * UniteCible);
-
+void retirerAffichage(Tunite * unite, TplateauJeu jeu);
 bool EstSurChemin(int* coord, int** chemin);
 void CalculeScoreEmplacement(Tunite emplacement);
 #endif // TOWERDEFEND_H_INCLUED
