@@ -88,40 +88,56 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
 //              Temps = O(n)
 //
 //*************************************************************************************************************//
-int **initChemin()
+Tchemin initChemin()
 {
-    srand(time(NULL));
-    int **chemin = (int**)malloc(sizeof(int*)*NBCOORDPARCOURS);
+    Tchemin chemin;
+    srand(time(NULL)); // Toujours mieux dans le main() si possible !
+    
+    chemin.chemin = (int**)malloc(sizeof(int*)*NBCOORDPARCOURS);
     for (int j=0;j<NBCOORDPARCOURS;j++)
     {
-        chemin[j] = (int*)malloc(sizeof(int)*2);
+        chemin.chemin[j] = (int*)malloc(sizeof(int)*2);
     }
+    
     int ydepart = 18;
     int xdepart = 5;
     int i = 0;
     int test = 1;
     int distanceMaxRestante = NBCOORDPARCOURS;
+    
     while (distanceMaxRestante > 0)
     {
+        if (ydepart <= 1) 
+        {
+            break; 
+        }
         int var;
         if (test == 1)
         {
-            var = 0;
+            var = 2;
         } 
-        else if(test != 1) 
+        else
         {
-            var = rand() % 3;
+            var = rand() % 2;
         }
-        if (var == 0) 
+        if (var == 2)
         {
             int val = rand() % 5;
-            if (val < 2)
+            if (val < 2) 
             {
-                val = 2; 
+                val = 2;
+            }
+            if (ydepart - val < 1) 
+            {
+                val = ydepart - 1;
+            }
+            if (val > distanceMaxRestante)
+            {
+                val = distanceMaxRestante;
             }
             if (val > 0)
             {
-                ecritCheminVersleHaut(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+                ecritCheminVersleHaut(chemin.chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
                 distanceMaxRestante -= val;
                 test = 0;
             }
@@ -133,7 +149,7 @@ int **initChemin()
         else if(var == 1)
         {
             int val = rand() % 7;
-            if (val <= 0) 
+            if (val <= 0)
             {
                 val = 1;
             }
@@ -141,34 +157,44 @@ int **initChemin()
             {
                 val = 10 - xdepart;
             }
+            if (val > distanceMaxRestante)
+            {
+                 val = distanceMaxRestante; 
+            }
             if (val > 0)
             {
-                ecritCheminVerslaDroite(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+                ecritCheminVerslaDroite(chemin.chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
                 distanceMaxRestante -= val;
                 test = 1;
             }
         }
-        else if(var == 2)
+        else if(var == 0)
         {
             int val = rand() % 7 + 1;
-            if (val <= 0)
+            if (val <= 0) 
             {
-                val = 1; 
+                 val = 1; 
             }
-            if (xdepart - val < 0) {
+            if (xdepart - val < 0) 
+            {
                 val = xdepart;
+            }
+            if (val > distanceMaxRestante)
+            {
+                val = distanceMaxRestante; 
             }
             if (val > 0)
             {
-                ecritCheminVerslaGauche(chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
+                ecritCheminVerslaGauche(chemin.chemin, &i, &xdepart, &ydepart, val, &distanceMaxRestante);
                 distanceMaxRestante -= val;
                 test = 1;
             }
         }
     }
+    chemin.taille = i;
+    
     return chemin;
 }
-
 
 
 

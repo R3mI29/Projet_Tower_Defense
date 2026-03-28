@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     // SAUF pour l'Eau, l''herbe et le pont qui apparaitront en l absence d'unité (NULL dans le plateau) et en foction de certains indices x,y définissant le chemin central
     SDL_Surface* TabSprite[11]={pSpriteTourSol,pSpriteTourAir,pSpriteTourRoi,pSpriteArcher,pSpriteChevalier,pSpriteDragon,pSpriteGargouille,pSpriteEau,pSpriteHerbe,pSpritePont,pSpriteTerre};
 
-    int** tabParcours=initChemin();  //tabParcours est un tableau de NBCOORDPARCOURS cases, chacune contenant un tableau à 2 cases (indice 0 pour X, indice 1 pour Y)
+    Tchemin tabParcours=initChemin();  //tabParcours est un tableau de NBCOORDPARCOURS cases, chacune contenant un tableau à 2 cases (indice 0 pour X, indice 1 pour Y)
 
     if ( pSpriteTourSol )  //si le permier sprite a bien �t� charg�, on suppose que les autres aussi
     {
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
 
 
-        prepareAllSpriteDuJeu(jeu,tabParcours,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
+        prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
         maj_fenetre(pWindow);
 
 
@@ -69,8 +69,8 @@ int main(int argc, char* argv[])
         /*                                                                    */
 
         TListePlayer listeRoi;
-        int posx = tabParcours[33][0];
-        int posy = tabParcours[33][1];
+        int posx = tabParcours.chemin[tabParcours.taille-1][0];
+        int posy = tabParcours.chemin[tabParcours.taille-1][1];
         printf("\nLa position x de la tour du roi est %d, et la posistion y est : %d\n", posx, posy);
         AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));
         PositionnePlayerOnPlateau(listeRoi, jeu);
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
         while ( cont != 0 ){   //VOUS DEVEZ GERER (DETECTER) LA FIN DU JEU -> tourRoiDetruite
                 SDL_PumpEvents(); //do events
                 efface_fenetre(pWinSurf);
-                prepareAllSpriteDuJeu(jeu,tabParcours,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
+                prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
 
                 /***********************************************************************/
                 /*                                                                     */
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 
                         //Ne pas modifiez les 4 lignes ci-dessous
                         efface_fenetre(pWinSurf);
-                        prepareAllSpriteDuJeu(jeu,tabParcours,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
+                        prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
                         maj_fenetre(pWindow);
                         SDL_Delay(300);
                 }
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 
                         //Ne pas modifiez les 4 lignes ci-dessous
                         efface_fenetre(pWinSurf);
-                        prepareAllSpriteDuJeu(jeu,tabParcours,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
+                        prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
                         maj_fenetre(pWindow);
                         SDL_Delay(300);
                 }
@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
 
                         //Ne pas modifiez les 4 lignes ci-dessous
                         efface_fenetre(pWinSurf);
-                        prepareAllSpriteDuJeu(jeu,tabParcours,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
+                        prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
                         maj_fenetre(pWindow);
                         SDL_Delay(300);
                 }
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 
                         //Ne pas modifiez les 4 lignes ci-dessous
                         efface_fenetre(pWinSurf);
-                        prepareAllSpriteDuJeu(jeu,tabParcours,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
+                        prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
                         maj_fenetre(pWindow);
                         SDL_Delay(300);
                 }
@@ -179,6 +179,6 @@ int main(int argc, char* argv[])
     }
     SDL_DestroyWindow(pWindow);
     SDL_Quit();
-    freeChemin(tabParcours);
+    freeChemin(tabParcours.chemin);
     return 0;
 }

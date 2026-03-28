@@ -1,1 +1,1 @@
-clang *.c -o towerdefend $(sdl2-config --cflags --libs)
+clang *.c -o jeu $(sdl2-config --cflags --libs)

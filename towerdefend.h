@@ -10,6 +10,11 @@
 typedef enum{tourSol, tourAir, tourRoi, archer, chevalier, dragon, gargouille} TuniteDuJeu;
 typedef enum{sol, solEtAir, air } Tcible;
 
+typedef struct
+{
+    int ** chemin;
+    int taille;
+}Tchemin;
 
 typedef struct {
     TuniteDuJeu nom;
@@ -48,7 +53,7 @@ typedef Tunite* ** TplateauJeu;  //tableau a deux dimensions de largeur 11 et ha
 
 TplateauJeu AlloueTab2D(int largeur, int hauteur);
 void afficheCoordonneesParcours(int **t, int nbcoord);
-int **initChemin();         //retourne le chemin emprunter par la horde, sous forme d'un tableau[NBCOORDPARCOURS][2]
+Tchemin initChemin();         //retourne le chemin emprunter par la horde, sous forme d'un tableau[NBCOORDPARCOURS][2]
 void freeChemin(int **tab);
 
 void initPlateauAvecNULL(TplateauJeu jeu,int largeur, int hauteur);
@@ -77,4 +82,4 @@ void combat(Tunite * UniteAttaquante, Tunite * UniteCible);
 
 bool EstSurChemin(int* coord, int** chemin);
 void CalculeScoreEmplacement(Tunite emplacement);
-#endif // TOWERDEFEND_H_INCLUDED
+#endif // TOWERDEFEND_H_INCLUED
