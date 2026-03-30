@@ -772,9 +772,9 @@ void retirerAffichage(Tunite * unite, TplateauJeu jeu)
 //
 //*************************************************************************************************************//
 
-bool EstSurChemin(int* coord, int** chemin){
+bool EstSurChemin(int posx, int posy, int** chemin){
     for(int k = 0; k < NBCOORDPARCOURS; k++){
-        if (chemin[k] == coord){
+        if (chemin[k][0] == posx || chemin[k][1]){
             return true;
         }
     }
@@ -866,19 +866,79 @@ void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin)
 //
 //*************************************************************************************************************//
 
-//void CreationUniteAleaRoi(TListePlayer * lst, int ** chemin)
-//{
-//     int Prob = rand()%101;
-//     if (Prob <= PROBROI)
-//     {
-//         int uniteAlea = rand()%2;
-//         if (uniteAlea == 0)
-//         {
-//                 AjouterUnite(lst, creeTourAir()); //AjouterUnite à une complexite de Temps de O(n)
-//         }
-//         else if (uniteAlea == 1)
-//         {
-//                 AjouterUnite(lst, creeTourSol());
-//         }
-//     }
-// }
+void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin)
+{
+    int Prob = rand()%101;
+    int Aleaposx = rand()%11;                   // Début de la zone qui va partir après l'optimisation du placement
+    int Aleaposy = rand()%19;
+    while (jeu[Aleaposx][Aleaposy] != NULL && EstSurChemin(Aleaposx, Aleaposy, chemin))
+    {
+        Aleaposx = rand()%11;
+        Aleaposy = rand()%19;
+    }                                           // Fin de la zone
+    if (Prob <= PROBROI)
+    {
+        int uniteAlea = rand()%2;
+        if (uniteAlea == 0)
+        {
+                AjouterUnite(lst, creeTourAir(Aleaposx, Aleaposy)); //AjouterUnite à une complexite de Temps de O(n)
+        }
+        else if (uniteAlea == 1)
+        {
+                AjouterUnite(lst, creeTourSol(Aleaposx, Aleaposy));
+        }
+    }
+}
+
+
+
+void TourDeJeu(TListePlayer tempRoi, TListePlayer tempHorde, TplateauJeu jeu, Tchemin chemin)
+{
+    TListePlayer actuRoi = tempRoi;
+    TListePlayer actuHorde = tempHorde;
+    while (actuHorde != NULL || actuRoi != NULL)
+    {
+        if (actuRoi != NULL)
+        {
+            TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
+            if (cibleRoi != NULL)
+            {
+                combat(actuRoi->pdata, cibleRoi->pdata);
+            }
+            actuRoi = actuRoi->suiv;
+            if (actuRoi->suiv == NULL)
+            {
+                TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
+                if (cibleRoi != NULL)
+                {
+                        combat(actuRoi->pdata, cibleRoi->pdata);
+                }
+                actuRoi = NULL;
+            }
+        }
+        if (actuHorde != NULL)
+        {
+            retirerAffichage(actuHorde->pdata, jeu);
+            DeplacerHorde(actuHorde->pdata, chemin.chemin, jeu);
+            TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
+            if (cibleHorde != NULL)
+            {
+                combat(actuHorde->pdata, cibleHorde->pdata);
+            }
+            PositionnePlayerOnPlateau(actuHorde, jeu);
+            actuHorde = actuHorde->suiv;
+            if (actuHorde->suiv == NULL)
+            {
+                retirerAffichage(actuHorde->pdata, jeu);
+                DeplacerHorde(actuHorde->pdata, chemin.chemin, jeu);
+                TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
+                if (cibleHorde != NULL)
+                {
+                    combat(actuHorde->pdata, cibleHorde->pdata);
+                }
+                PositionnePlayerOnPlateau(actuHorde, jeu);
+                actuHorde = NULL;
+            }
+        }
+    }
+}
