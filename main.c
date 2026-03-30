@@ -100,7 +100,14 @@ int main(int argc, char* argv[])
                 bool tour = false;
                 while (!tour)
                 {
-                        
+                        TourDeJeu(tempRoi, tempHorde, jeu, tabParcours);
+                        tour = true;
+                        if (tourRoiDetruite(tempRoi))
+                        {
+                                message("Fin de la partie","Vous avez perdu !!!");
+                                cont = 0;
+                                tour = true;
+                        } 
                 }
                 /*                                                                     */
                 /*                                                                     */
