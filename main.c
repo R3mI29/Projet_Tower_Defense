@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
                         tour = true;
                         if (tourRoiDetruite(tempRoi))
                         {
-                                message("Fin de la partie","Vous avez perdu !!!");
+                                message("Fin de la partie","Vous avez perdu !!!!");
                                 cont = 0;
                                 tour = true;
                         } 
