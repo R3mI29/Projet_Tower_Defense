@@ -82,8 +82,9 @@ bool EstEnnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
 void combat(Tunite * UniteAttaquante, Tunite * UniteCible);
 void retirerAffichage(Tunite * unite, TplateauJeu jeu);
-bool EstSurChemin(int* coord, int** chemin);
+bool EstSurChemin(int posx, int posy, int** chemin);
 void CalculeScoreEmplacement(Tunite emplacement);
-void CreationUniteAleaRoi(TListePlayer * lst, int ** chemin);
+void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin);
 void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin);
+void TourDeJeu(TListePlayer tempRoi, TListePlayer tempHorde, TplateauJeu jeu, Tchemin chemin);
 #endif // TOWERDEFEND_H_INCLUED
