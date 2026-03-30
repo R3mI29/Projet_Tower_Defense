@@ -866,19 +866,19 @@ void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin)
 //
 //*************************************************************************************************************//
 
-void CreationUniteAleaRoi(TListePlayer * lst, int ** chemin)
-{
-    int Prob = rand()%101;
-    if (Prob <= PROBROI)
-    {
-        int uniteAlea = rand()%2;
-        if (uniteAlea == 0)
-        {
-                AjouterUnite(lst, creeTourAir()); //AjouterUnite à une complexite de Temps de O(n)
-        }
-        else if (uniteAlea == 1)
-        {
-                AjouterUnite(lst, creeTourSol());
-        }
-    }
-}
+//void CreationUniteAleaRoi(TListePlayer * lst, int ** chemin)
+//{
+//     int Prob = rand()%101;
+//     if (Prob <= PROBROI)
+//     {
+//         int uniteAlea = rand()%2;
+//         if (uniteAlea == 0)
+//         {
+//                 AjouterUnite(lst, creeTourAir()); //AjouterUnite à une complexite de Temps de O(n)
+//         }
+//         else if (uniteAlea == 1)
+//         {
+//                 AjouterUnite(lst, creeTourSol());
+//         }
+//     }
+// }
