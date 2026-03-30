@@ -95,46 +95,12 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
-                CreationUniteAleaHorde(listHorde, tabParcours.chemin);
-                CreationUniteAleaRoi(listeRoi, tabParcours.chemin);
+                CreationUniteAleaHorde(&listHorde,tabParcours.chemin);
+                CreationUniteAleaRoi(&listeRoi, jeu, tabParcours.chemin);
                 bool tour = false;
                 while (!tour)
                 {
-                        if (tempRoi->suiv != NULL)
-                        {
-                                TListePlayer cibleRoi = quiEstAPortee(jeu, tempRoi->pdata);
-                                if (cibleRoi != NULL)
-                                {
-                                        combat(tempRoi->pdata, cibleRoi->pdata);
-                                }
-                                if (tempRoi->suiv != NULL)
-                                {
-                                        tempRoi = tempRoi->suiv;
-                                }
-                                if (tempRoi->suiv == NULL)
-                                {
-                                        tempRoi = NULL;
-                                }
-                        }
-                        if (tempHorde->suiv != NULL)
-                        {
-                                retirerAffichage(tempHorde->pdata, jeu);
-                                DeplacerHorde(tempHorde->pdata, tabParcours.chemin, jeu);
-                                TListePlayer cibleHorde = quiEstAPortee(jeu, tempHorde->pdata);
-                                if (cibleHorde != NULL)
-                                {
-                                        combat(tempHorde->pdata, cibleHorde->pdata);
-                                }
-                                PositionnePlayerOnPlateau(tempHorde, jeu);
-                                if (tempHorde->suiv != NULL)
-                                {
-                                        tempHorde = tempHorde->suiv;
-                                }
-                                if (tempHorde->suiv == NULL)
-                                {
-                                        tempHorde = NULL;
-                                }
-                        }                      
+                        
                 }
                 /*                                                                     */
                 /*                                                                     */
