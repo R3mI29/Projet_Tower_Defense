@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
                 bool tour = false;
                 while (!tour)
                 {
-                        TourDeJeu(&listeRoi, &listHorde, jeu, tabParcours);
+                        TourDeJeu(&listeRoi, &listHorde, jeu, tabParcours, pWinSurf);
                         tour = true;
                         if (tourRoiDetruite(tempRoi))
                         {
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
                                 printf("\nLa tour du roi est detruite fin du jeu\n");
                                 cont = 0;
                                 tour = true;
-                        } 
+                        }
                 }
                 /*                                                                     */
                 /*                                                                     */

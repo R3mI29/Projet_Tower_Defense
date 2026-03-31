@@ -725,10 +725,11 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 //              Temps = O(1)
 //
 //*************************************************************************************************************//
-void combat(Tunite * UniteAttaquante, Tunite * UniteCible)
+void combat(SDL_Surface * surface, Tunite * UniteAttaquante, Tunite * UniteCible)
 {
     if (EstEnnemi(UniteAttaquante, UniteCible) == true && ciblable(UniteAttaquante, UniteCible) == true)
     {
+        dessineAttaque(surface,UniteAttaquante, UniteCible);
         UniteCible->pointsDeVie -= UniteAttaquante->degats;
     }
 }
@@ -912,7 +913,7 @@ void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin)
 //
 //
 //*************************************************************************************************************//
-void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, Tchemin chemin)
+void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface)
 {
     TListePlayer actuRoi = *tempRoi;
     while (actuRoi != NULL)
@@ -920,7 +921,7 @@ void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, 
         TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
         if (cibleRoi != NULL)
         {
-            combat(actuRoi->pdata, cibleRoi->pdata);
+            combat(surface,actuRoi->pdata, cibleRoi->pdata);
             if (cibleRoi->pdata->pointsDeVie <= 0)
             {
                 retirerAffichage(cibleRoi->pdata, jeu);
@@ -941,7 +942,7 @@ void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, 
             TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
             if (cibleHorde != NULL)
             {
-                combat(actuHorde->pdata, cibleHorde->pdata);
+                combat(surface,actuHorde->pdata, cibleHorde->pdata);
             }
         }
         actuHorde = suivantHorde; 
