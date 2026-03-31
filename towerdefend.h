@@ -86,5 +86,5 @@ bool EstSurChemin(int posx, int posy, int** chemin);
 void CalculeScoreEmplacement(Tunite emplacement);
 void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin);
 void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin);
-void TourDeJeu(TListePlayer tempRoi, TListePlayer tempHorde, TplateauJeu jeu, Tchemin chemin);
+void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin);
 #endif // TOWERDEFEND_H_INCLUED

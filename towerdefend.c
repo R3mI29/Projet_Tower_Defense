@@ -159,7 +159,7 @@ Tchemin initChemin()
             }
             if (val > distanceMaxRestante)
             {
-                 val = distanceMaxRestante; 
+                val = distanceMaxRestante; 
             }
             if (val > 0)
             {
@@ -173,7 +173,7 @@ Tchemin initChemin()
             int val = rand() % 7 + 1;
             if (val <= 0) 
             {
-                 val = 1; 
+                val = 1; 
             }
             if (xdepart - val < 0) 
             {
@@ -689,6 +689,7 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
     {
         TListePlayer temp = *player;
         *player = (*player)->suiv;
+        free(UniteDetruite);
         free(temp);
         return;
     }
@@ -701,6 +702,7 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
     {
         TListePlayer temp = lst->suiv;
         lst->suiv = temp->suiv;
+        free(UniteDetruite);
         free(temp);
     }
 }
@@ -774,7 +776,7 @@ void retirerAffichage(Tunite * unite, TplateauJeu jeu)
 
 bool EstSurChemin(int posx, int posy, int** chemin){
     for(int k = 0; k < NBCOORDPARCOURS; k++){
-        if (chemin[k][0] == posx || chemin[k][1]){
+        if (chemin[k][0] == posx || chemin[k][1] == posy){
             return true;
         }
     }
@@ -871,7 +873,7 @@ void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin)
     int Prob = rand()%101;
     int Aleaposx = rand()%11;                   // Début de la zone qui va partir après l'optimisation du placement
     int Aleaposy = rand()%19;
-    while (jeu[Aleaposx][Aleaposy] != NULL && EstSurChemin(Aleaposx, Aleaposy, chemin))
+    while (jeu[Aleaposx][Aleaposy] != NULL || EstSurChemin(Aleaposx, Aleaposy, chemin))
     {
         Aleaposx = rand()%11;
         Aleaposy = rand()%19;
@@ -891,33 +893,57 @@ void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin)
 }
 
 
-
-void TourDeJeu(TListePlayer tempRoi, TListePlayer tempHorde, TplateauJeu jeu, Tchemin chemin)
+//*************************************************************************************************************//
+//
+// Fonction     TourDeJeu
+//
+//
+// Param =  TListePlayer * tempRoi(La liste du Roi)
+//          TListePlayer * tempHorde(La liste de la horde)
+//          TplateauJeu jeu (Le plateau qui est affiché et sur lequel les unités évoluent)
+//          Tchemin (Le Chemin que doivent prendre les unités de la horde)
+//
+//
+// Return = void (le changement se fais dans les listes et sur le jeu)
+//
+//
+// Complexité = Temps = O(n^n)
+//              Espace = O(n²)
+//
+//
+//*************************************************************************************************************//
+void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, Tchemin chemin)
 {
-    TListePlayer actuRoi = tempRoi;
-    TListePlayer actuHorde = tempHorde;
-    while (actuHorde != NULL || actuRoi != NULL)
+    TListePlayer actuRoi = *tempRoi;
+    while (actuRoi != NULL)
     {
-        if (actuRoi != NULL)
+        TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
+        if (cibleRoi != NULL)
         {
-            TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
-            if (cibleRoi != NULL)
+            combat(actuRoi->pdata, cibleRoi->pdata);
+            if (cibleRoi->pdata->pointsDeVie <= 0)
             {
-                combat(actuRoi->pdata, cibleRoi->pdata);
+                retirerAffichage(cibleRoi->pdata, jeu);
+                supprimerUnite(tempHorde, cibleRoi->pdata, jeu);
             }
-            actuRoi = actuRoi->suiv;
         }
-        if (actuHorde != NULL)
+        actuRoi = actuRoi->suiv;
+    }
+    TListePlayer actuHorde = *tempHorde;
+    while (actuHorde != NULL)
+    {
+        TListePlayer suivantHorde = actuHorde->suiv; 
+        if (actuHorde->pdata->pointsDeVie > 0)
         {
             retirerAffichage(actuHorde->pdata, jeu);
             DeplacerHorde(actuHorde->pdata, chemin, jeu);
+            PositionnePlayerOnPlateau(actuHorde, jeu);
             TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
             if (cibleHorde != NULL)
             {
                 combat(actuHorde->pdata, cibleHorde->pdata);
             }
-            PositionnePlayerOnPlateau(actuHorde, jeu);
-            actuHorde = actuHorde->suiv;
         }
+        actuHorde = suivantHorde; 
     }
 }
