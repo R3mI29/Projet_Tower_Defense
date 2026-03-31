@@ -425,43 +425,43 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite)
 //              Temps = O(n)
 //
 //*************************************************************************************************************//
-void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
+void DeplacerHorde(Tunite * unite, Tchemin chemin, TplateauJeu jeu)
 {
     int etape_actuelle = 0;
     int vitesse = (int)unite->vitessedeplacement;
-    for (int i = 0; i < NBCOORDPARCOURS; i++) {
-        if (unite->posX == chemin[i][0] && unite->posY == chemin[i][1]) {
+    for (int i = 0; i < chemin.taille; i++) {
+        if (unite->posX == chemin.chemin[i][0] && unite->posY == chemin.chemin[i][1]) {
             etape_actuelle = i;
             break;
         }
     }
-    if (etape_actuelle+vitesse > NBCOORDPARCOURS )
+    if (etape_actuelle+vitesse > chemin.taille )
     {
         int i = 1;
-        int posx = chemin[NBCOORDPARCOURS -i][0];
-        int posy = chemin[NBCOORDPARCOURS -i][1];
+        int posx = chemin.chemin[chemin.taille -i][0];
+        int posy = chemin.chemin[chemin.taille -i][1];
         if (!CaseOccupe(posx, posy, jeu))
         {
-            unite->posX = chemin[NBCOORDPARCOURS - i][0];
-            unite->posY = chemin[NBCOORDPARCOURS - i][1];   
+            unite->posX = chemin.chemin[chemin.taille - i][0];
+            unite->posY = chemin.chemin[chemin.taille - i][1];   
         }
         else if (CaseOccupe(posx, posy, jeu))
         {    
             while (CaseOccupe(posx, posy, jeu) == false)
             {
                 i++;
-                posx = chemin[NBCOORDPARCOURS - i][0];
-                posy = chemin[NBCOORDPARCOURS - i][1];
+                posx = chemin.chemin[chemin.taille - i][0];
+                posy = chemin.chemin[chemin.taille - i][1];
             }
             unite->posX = posx;
             unite->posY = posy;
         }
     }
-    else if (etape_actuelle+vitesse <= NBCOORDPARCOURS - 1)
+    else if (etape_actuelle+vitesse <= chemin.taille - 1)
     {
         int i = 0;
-        int posx = chemin[etape_actuelle + vitesse][0];
-        int posy = chemin[etape_actuelle + vitesse][1];
+        int posx = chemin.chemin[etape_actuelle + vitesse][0];
+        int posy = chemin.chemin[etape_actuelle + vitesse][1];
         if (!CaseOccupe(posx, posy, jeu))
         {
             unite->posX = posx;
@@ -472,8 +472,8 @@ void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu)
             while (CaseOccupe(posx, posy, jeu) == true)
             {
                 i++;
-                posx = chemin[(etape_actuelle + vitesse) - i][0];
-                posy = chemin[(etape_actuelle + vitesse) - i][1];
+                posx = chemin.chemin[(etape_actuelle + vitesse) - i][0];
+                posy = chemin.chemin[(etape_actuelle + vitesse) - i][1];
             }
             unite->posX = posx;
             unite->posY = posy;
@@ -906,20 +906,11 @@ void TourDeJeu(TListePlayer tempRoi, TListePlayer tempHorde, TplateauJeu jeu, Tc
                 combat(actuRoi->pdata, cibleRoi->pdata);
             }
             actuRoi = actuRoi->suiv;
-            if (actuRoi->suiv == NULL)
-            {
-                TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
-                if (cibleRoi != NULL)
-                {
-                        combat(actuRoi->pdata, cibleRoi->pdata);
-                }
-                actuRoi = NULL;
-            }
         }
         if (actuHorde != NULL)
         {
             retirerAffichage(actuHorde->pdata, jeu);
-            DeplacerHorde(actuHorde->pdata, chemin.chemin, jeu);
+            DeplacerHorde(actuHorde->pdata, chemin, jeu);
             TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
             if (cibleHorde != NULL)
             {
@@ -927,18 +918,6 @@ void TourDeJeu(TListePlayer tempRoi, TListePlayer tempHorde, TplateauJeu jeu, Tc
             }
             PositionnePlayerOnPlateau(actuHorde, jeu);
             actuHorde = actuHorde->suiv;
-            if (actuHorde->suiv == NULL)
-            {
-                retirerAffichage(actuHorde->pdata, jeu);
-                DeplacerHorde(actuHorde->pdata, chemin.chemin, jeu);
-                TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
-                if (cibleHorde != NULL)
-                {
-                    combat(actuHorde->pdata, cibleHorde->pdata);
-                }
-                PositionnePlayerOnPlateau(actuHorde, jeu);
-                actuHorde = NULL;
-            }
         }
     }
 }

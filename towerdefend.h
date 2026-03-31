@@ -73,7 +73,7 @@ Tunite *creeChevalier(int posx, int posy);
 /*  Kernel  */
 void PositionnePlayerOnPlateau(TListePlayer player, TplateauJeu jeu);
 void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
-void DeplacerHorde(Tunite * unite, int ** chemin, TplateauJeu jeu);
+void DeplacerHorde(Tunite * unite, Tchemin chemin, TplateauJeu jeu);
 bool CaseOccupe(int posx, int posy, TplateauJeu jeu);
 bool tourRoiDetruite(TListePlayer player);
 TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante);
