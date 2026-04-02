@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
                 CreationUniteAleaHorde(&listHorde,tabParcours);
-                if (nbTours(listeRoi) < 100)
+                if (nbTours(listeRoi) < (LARGEURJEU*HAUTEURJEU)-tabParcours.taille) // la taille de fenêtre sans la taille du chemin
                 {
                         CreationUniteAleaRoi(&listeRoi, jeu, tabParcours);
                 }
