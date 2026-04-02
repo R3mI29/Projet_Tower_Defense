@@ -775,9 +775,9 @@ void retirerAffichage(Tunite * unite, TplateauJeu jeu)
 //
 //*************************************************************************************************************//
 
-bool EstSurChemin(int posx, int posy, int** chemin){
-    for(int k = 0; k < NBCOORDPARCOURS; k++){
-        if (chemin[k][0] == posx || chemin[k][1] == posy){
+bool EstSurChemin(int posx, int posy, Tchemin chemin){
+    for(int k = 0; k < chemin.taille; k++){
+        if (chemin.chemin[k][0] == posx && chemin.chemin[k][1] == posy){
             return true;
         }
     }
@@ -825,7 +825,7 @@ void CalculeScoreEmplacement(Tunite emplacement){
 //
 //*************************************************************************************************************//
 
-void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin)
+void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin)
 {
     int Prob = rand()%101;
     if (Prob <= PROBHORDE)
@@ -833,19 +833,19 @@ void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin)
         int uniteAlea = rand()%4;
         if (uniteAlea == 0)
         {
-                AjouterUnite(lst, creeArcher(chemin[0][0], chemin[0][1])); //AjouterUnite à une complexite de Temps de O(n)
+                AjouterUnite(lst, creeArcher(chemin.chemin[0][0], chemin.chemin[0][1])); //AjouterUnite à une complexite de Temps de O(n)
         }
         else if (uniteAlea == 1)
         {
-                AjouterUnite(lst, creeChevalier(chemin[0][0], chemin[0][1]));
+                AjouterUnite(lst, creeChevalier(chemin.chemin[0][0], chemin.chemin[0][1]));
         }
         else if (uniteAlea == 2)
         {
-                AjouterUnite(lst, creeDragon(chemin[0][0], chemin[0][1]));
+                AjouterUnite(lst, creeDragon(chemin.chemin[0][0], chemin.chemin[0][1]));
         }
         else if (uniteAlea == 3)
         {
-                AjouterUnite(lst, creeGargouille(chemin[0][0], chemin[0][1]));
+                AjouterUnite(lst, creeGargouille(chemin.chemin[0][0], chemin.chemin[0][1]));
         }
     }
 }
@@ -869,7 +869,7 @@ void CreationUniteAleaHorde(TListePlayer * lst, int ** chemin)
 //
 //*************************************************************************************************************//
 
-void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, int ** chemin)
+void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin)
 {
     int Prob = rand()%101;
     int Aleaposx = rand()%11;                   // Début de la zone qui va partir après l'optimisation du placement

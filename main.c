@@ -70,19 +70,18 @@ int main(int argc, char* argv[])
         /*Les listes*/
         TListePlayer listeRoi = NULL;
         TListePlayer listHorde = NULL;
-
         /*Tour du Roi*/
         int posx = tabParcours.chemin[tabParcours.taille-1][0];
         int posy = tabParcours.chemin[tabParcours.taille-1][1];
-        AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));
-        AjouterUnite(&listeRoi, creeTourSol(5, 7));
+        AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));    // Posy -1, car on veut la placer sur la case juste au dessus de la fin du chemin.
         PositionnePlayerOnPlateau(listeRoi, jeu);
-
         // FIN de vos variables                                               */
         /**********************************************************************/
 
 
         int cont = 1;
+        //On veut limiter le nombres de tours pour éviter que le code plante ou mette trop de temps pour trouver une place
+        int nbtours = 0; 
         while ( cont != 0 )
         {
                 TListePlayer tempHorde = listHorde;
@@ -95,18 +94,23 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
-                CreationUniteAleaHorde(&listHorde,tabParcours.chemin);
-                CreationUniteAleaRoi(&listeRoi, jeu, tabParcours.chemin);
+                CreationUniteAleaHorde(&listHorde,tabParcours);
+                if (nbtours < 100)
+                {
+                        CreationUniteAleaRoi(&listeRoi, jeu, tabParcours);
+                        nbtours++;
+                }
                 bool tour = false;
                 while (!tour)
                 {
                         TourDeJeu(&listeRoi, &listHorde, jeu, tabParcours, pWinSurf);
+                        PositionnePlayerOnPlateau(listeRoi, jeu);
                         tour = true;
                         if (tourRoiDetruite(tempRoi))
                         {
                                 message("Fin de la partie","Vous avez perdu !!!!");
                                 printf("\nLa tour du roi est detruite fin du jeu\n");
-                                cont = 0;
+                                cont--;
                                 tour = true;
                         }
                 }
@@ -122,7 +126,7 @@ int main(int argc, char* argv[])
                 //LECTURE DE CERTAINES TOUCHES POUR LANCER LES RESTAURATIONS ET SAUVEGARDES
                 const Uint8* pKeyStates = SDL_GetKeyboardState(NULL);
                 if ( pKeyStates[SDL_SCANCODE_V] ){
-                        /* Ajouter vos appels de fonctions ci-dessous qd le joueur appuye sur D */
+                        /* Ajouter vos appels de fonctions ci-dessous qd le joueur appuye sur V */
 
                         // APPELEZ ICI VOTRE FONCTION DE SAUVEGARDE/RESTAURATION DEMANDEE
                         message("Sauvegarde","Placer ici votre fonction de restauration/sauvegarde");
