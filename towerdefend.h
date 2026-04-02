@@ -87,4 +87,5 @@ void CalculeScoreEmplacement(Tunite emplacement);
 void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin);
 void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin);
 void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface);
+int nbTours(TListePlayer lst);
 #endif // TOWERDEFEND_H_INCLUED

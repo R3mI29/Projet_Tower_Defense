@@ -948,3 +948,16 @@ void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, 
         actuHorde = suivantHorde; 
     }
 }
+
+
+
+int nbTours(TListePlayer lst)
+{
+    int res = -1;
+    while (lst != NULL)
+    {
+        lst = lst->suiv;
+        res++;   
+    }
+    return res;
+}

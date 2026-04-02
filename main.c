@@ -80,8 +80,6 @@ int main(int argc, char* argv[])
 
 
         int cont = 1;
-        //On veut limiter le nombres de tours pour éviter que le code plante ou mette trop de temps pour trouver une place
-        int nbtours = 0; 
         while ( cont != 0 )
         {
                 TListePlayer tempHorde = listHorde;
@@ -95,10 +93,9 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
                 CreationUniteAleaHorde(&listHorde,tabParcours);
-                if (nbtours < 100)
+                if (nbTours(listeRoi) < 100)
                 {
                         CreationUniteAleaRoi(&listeRoi, jeu, tabParcours);
-                        nbtours++;
                 }
                 bool tour = false;
                 while (!tour)
