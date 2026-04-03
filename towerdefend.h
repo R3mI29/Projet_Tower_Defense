@@ -88,4 +88,7 @@ void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin);
 void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin);
 void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface);
 int nbTours(TListePlayer lst);
+void ViderListe(TListePlayer *liste);
+void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde);
+void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde);
 #endif // TOWERDEFEND_H_INCLUED

@@ -684,7 +684,6 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
     {
         return;
     }
-    jeu[UniteDetruite->posX][UniteDetruite->posY] = NULL;
     if ((*player)->pdata == UniteDetruite)
     {
         TListePlayer temp = *player;
@@ -960,4 +959,87 @@ int nbTours(TListePlayer lst)
         res++;   
     }
     return res;
+}
+
+
+//      A faire !!!!!!!!!!!!!!!!  //
+
+void ViderListe(TListePlayer *liste, TplateauJeu jeu, Tchemin chemin){ 
+    TListePlayer temp;
+    chemin.chemin = NULL; 
+    while (*liste != NULL)
+    {
+        temp = *liste;
+        retirerAffichage(temp->pdata, jeu);
+        *liste = (*liste)->suiv;
+        free(temp->pdata);
+        free(temp);
+    }
+}
+
+
+void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde) {
+    FILE *f = fopen("partiebin.tdb", "wb");
+    if (f == NULL) 
+    {
+        printf("Erreur d'ouverture du fichier binaire.\n");
+        return;
+    }
+    int nbRoi = 0;
+    TListePlayer temp = listeRoi;
+    while(temp)
+    {
+        nbRoi++; temp = temp->suiv;
+    }
+    fwrite(&nbRoi, sizeof(int), 1, f);   
+    temp = listeRoi;
+    while(temp)
+    {
+        fwrite(temp->pdata, sizeof(Tunite), 1, f);
+        temp = temp->suiv;
+    }
+    int nbHorde = 0;
+    temp = listeHorde;
+    while(temp)
+    {
+        nbHorde++; temp = temp->suiv;
+    }
+    fwrite(&nbHorde, sizeof(int), 1, f);
+    temp = listeHorde;
+    while(temp) 
+    {
+        fwrite(temp->pdata, sizeof(Tunite), 1, f);
+        temp = temp->suiv;
+    }
+    fclose(f);
+    printf("Partie sauvegardee en binaire !\n");
+}
+
+void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde) {
+    FILE *f = fopen("partiebin.tdb", "rb");
+    if (f == NULL)
+    {
+        printf("Aucune sauvegarde binaire trouvee.\n");
+        return;
+    }
+    ViderListe(listeRoi);
+    ViderListe(listeHorde);
+    int nbRoi = 0;
+    int nbHorde = 0;
+    fread(&nbRoi, sizeof(int), 1, f);
+    for (int i = 0; i < nbRoi; i++)
+    {
+        Tunite *u = (Tunite*)malloc(sizeof(Tunite));
+        fread(u, sizeof(Tunite), 1, f);
+        AjouterUnite(listeRoi, u);
+    }
+    fread(&nbHorde, sizeof(int), 1, f);
+    for (int i = 0; i < nbHorde; i++) 
+    {
+        Tunite *u = (Tunite*)malloc(sizeof(Tunite));
+        fread(u, sizeof(Tunite), 1, f);
+        AjouterUnite(listeHorde, u);
+    }
+    fclose(f);
+    printf("Partie binaire chargee !\n");
 }
