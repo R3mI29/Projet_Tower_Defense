@@ -7,7 +7,7 @@
 #define X 0
 #define Y 1
 #define PROBHORDE 25
-#define PROBROI 25
+#define PROBROI 5
 
 typedef enum{tourSol, tourAir, tourRoi, archer, chevalier, dragon, gargouille} TuniteDuJeu;
 typedef enum{sol, solEtAir, air } Tcible;
@@ -88,7 +88,7 @@ void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin);
 void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin);
 void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface);
 int nbTours(TListePlayer lst);
-void ViderListe(TListePlayer *liste);
-void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde);
-void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde);
+void ViderListe(TListePlayer *liste, TplateauJeu jeu);
+void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);
+void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin *chemin);
 #endif // TOWERDEFEND_H_INCLUED

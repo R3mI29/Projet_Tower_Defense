@@ -962,11 +962,8 @@ int nbTours(TListePlayer lst)
 }
 
 
-//      A faire !!!!!!!!!!!!!!!!  //
-
-void ViderListe(TListePlayer *liste, TplateauJeu jeu, Tchemin chemin){ 
+void ViderListe(TListePlayer *liste, TplateauJeu jeu){ 
     TListePlayer temp;
-    chemin.chemin = NULL; 
     while (*liste != NULL)
     {
         temp = *liste;
@@ -978,7 +975,7 @@ void ViderListe(TListePlayer *liste, TplateauJeu jeu, Tchemin chemin){
 }
 
 
-void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde) {
+void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin){
     FILE *f = fopen("partiebin.tdb", "wb");
     if (f == NULL) 
     {
@@ -1011,19 +1008,28 @@ void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde) {
         fwrite(temp->pdata, sizeof(Tunite), 1, f);
         temp = temp->suiv;
     }
+    fwrite(&chemin.taille, sizeof(int), 1, f);
+    for (int i = 0; i < chemin.taille; i++) 
+    {
+        fwrite(chemin.chemin[i], sizeof(int), 2, f); 
+    }
     fclose(f);
     printf("Partie sauvegardee en binaire !\n");
 }
 
-void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde) {
+
+
+void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin *chemin)
+{
     FILE *f = fopen("partiebin.tdb", "rb");
     if (f == NULL)
     {
         printf("Aucune sauvegarde binaire trouvee.\n");
         return;
     }
-    ViderListe(listeRoi);
-    ViderListe(listeHorde);
+    ViderListe(listeRoi, jeu);
+    ViderListe(listeHorde, jeu);
+    initPlateauAvecNULL(jeu, LARGEURJEU, HAUTEURJEU);
     int nbRoi = 0;
     int nbHorde = 0;
     fread(&nbRoi, sizeof(int), 1, f);
@@ -1040,6 +1046,40 @@ void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde) {
         fread(u, sizeof(Tunite), 1, f);
         AjouterUnite(listeHorde, u);
     }
+if (chemin->chemin != NULL) 
+    {
+        for (int j = 0; j < NBCOORDPARCOURS; j++) 
+        {
+            free(chemin->chemin[j]);
+        }
+        free(chemin->chemin);
+    }
+    int nouvelleTaille;
+    fread(&nouvelleTaille, sizeof(int), 1, f);
+    chemin->taille = nouvelleTaille;
+    chemin->chemin = (int**)malloc(sizeof(int*) * NBCOORDPARCOURS); 
+
+    for (int j = 0; j < NBCOORDPARCOURS; j++) 
+    {
+        chemin->chemin[j] = (int*)malloc(sizeof(int) * 2);
+        
+        if (j < chemin->taille) 
+        {
+            fread(chemin->chemin[j], sizeof(int), 2, f);
+        }
+        else 
+        {
+            if (chemin->taille > 0) {
+                chemin->chemin[j][0] = chemin->chemin[chemin->taille - 1][0];
+                chemin->chemin[j][1] = chemin->chemin[chemin->taille - 1][1];
+            } else {
+                chemin->chemin[j][0] = 0;
+                chemin->chemin[j][1] = 0;
+            }
+        }
+    }
     fclose(f);
+    PositionnePlayerOnPlateau(*listeRoi, jeu);
+    PositionnePlayerOnPlateau(*listeHorde, jeu);
     printf("Partie binaire chargee !\n");
 }

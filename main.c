@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
 
                         // APPELEZ ICI VOTRE FONCTION DE SAUVEGARDE/RESTAURATION DEMANDEE
                         printf("\n\n\ncoucou\n\n\n");
-                        ChargerBinaire(&listeRoi, &listHorde);
+                        ChargerBinaire(&listeRoi, &listHorde, jeu, &tabParcours);
                         message("Sauvegarde","Placer ici votre fonction de restauration/sauvegarde");
 
                         //Ne pas modifiez les 4 lignes ci-dessous
@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
                 }
                 if ( pKeyStates[SDL_SCANCODE_S] ){
                         /* Ajouter vos appels de fonctions ci-dessous qd le joueur appyue sur S */
-                        SauvegarderBinaire(listeRoi, listHorde);
+                        SauvegarderBinaire(listeRoi, listHorde, tabParcours);
                         // APPELEZ ICI VOTRE FONCTION DE SAUVEGARDE/RESTAURATION DEMANDEE
                         message("Sauvegarde","Placer ici votre fonction de restauration/sauvegarde");
 
