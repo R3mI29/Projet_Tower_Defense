@@ -1083,3 +1083,124 @@ if (chemin->chemin != NULL)
     PositionnePlayerOnPlateau(*listeHorde, jeu);
     printf("Partie binaire chargee !\n");
 }
+
+
+void ecrireUnite(FILE *f, Tunite *u)
+{
+    fprintf(f, "%d %d %d %d %f %d %d %f %d %d %d\n",(int)u->nom, (int)u->cibleAttaquable, (int)u->maposition,u->pointsDeVie, u->vitesseAttaque, u->degats, u->portee,u->vitessedeplacement, u->posX, u->posY, u->peutAttaquer);
+}
+
+void lireUnite(FILE *f, Tunite *u)
+{
+    int nomInt, cibleInt, maposInt;
+    fscanf(f, "%d %d %d %d %f %d %d %f %d %d %d",&nomInt, &cibleInt, &maposInt,&u->pointsDeVie, &u->vitesseAttaque, &u->degats, &u->portee,&u->vitessedeplacement, &u->posX, &u->posY, &u->peutAttaquer);
+    u->nom             = (TuniteDuJeu)nomInt;
+    u->cibleAttaquable = (Tcible)cibleInt;
+    u->maposition      = (Tcible)maposInt;
+}
+
+
+void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin)
+{
+    FILE *f = fopen("partieseq.tds", "w");
+    if (f == NULL)
+    {
+        printf("Erreur ouverture fichier sequentiel.\n"); 
+        return;
+    }
+    int nbRoi = 0;
+    TListePlayer temp = listeRoi;
+    while (temp)
+    {
+        nbRoi++; temp = temp->suiv;
+    }
+    fprintf(f, "%d\n", nbRoi);
+    temp = listeRoi;
+    while (temp)
+    {
+        ecrireUnite(f, temp->pdata); temp = temp->suiv;
+    }
+    int nbHorde = 0;
+    temp = listeHorde;
+    while (temp)
+    {
+        nbHorde++; 
+        temp = temp->suiv;
+    }
+    fprintf(f, "%d\n", nbHorde);
+    temp = listeHorde;
+    while (temp)
+    {
+        ecrireUnite(f, temp->pdata);
+        temp = temp->suiv;
+    }
+
+    fprintf(f, "%d\n", chemin.taille);
+    for (int i = 0; i < chemin.taille; i++)
+    {
+        fprintf(f, "%d %d\n", chemin.chemin[i][X], chemin.chemin[i][Y]);
+    }
+    fclose(f);
+    printf("Partie sauvegardee en sequentiel !\n");
+}
+
+void ChargerSequentiel(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin*chemin)
+{
+    FILE *f = fopen("partieseq.tds", "r");
+    if (f == NULL)
+    {
+        printf("Aucune sauvegarde sequentielle trouvee.\n"); 
+        return;
+    }
+    ViderListe(listeRoi,   jeu);
+    ViderListe(listeHorde, jeu);
+    initPlateauAvecNULL(jeu, LARGEURJEU, HAUTEURJEU);
+    int nbRoi = 0;
+    fscanf(f, "%d", &nbRoi);
+    for (int i = 0; i < nbRoi; i++)
+    {
+        Tunite *u = (Tunite*)malloc(sizeof(Tunite));
+        lireUnite(f, u);
+        AjouterUnite(listeRoi, u);
+    }
+    int nbHorde = 0;
+    fscanf(f, "%d", &nbHorde);
+    for (int i = 0; i < nbHorde; i++)
+    {
+        Tunite *u = (Tunite*)malloc(sizeof(Tunite));
+        lireUnite(f, u);
+        AjouterUnite(listeHorde, u);
+    }
+    if (chemin->chemin != NULL)
+    {
+        for (int j = 0; j < NBCOORDPARCOURS; j++) free(chemin->chemin[j]);
+        free(chemin->chemin);
+    }
+    int nouvelleTaille = 0;
+    fscanf(f, "%d", &nouvelleTaille);
+    chemin->taille = nouvelleTaille;
+    chemin->chemin = (int**)malloc(sizeof(int*) * NBCOORDPARCOURS);
+    for (int j = 0; j < NBCOORDPARCOURS; j++)
+    {
+        chemin->chemin[j] = (int*)malloc(sizeof(int) * 2);
+        if (j < chemin->taille)
+            fscanf(f, "%d %d", &chemin->chemin[j][0], &chemin->chemin[j][1]);
+        else
+        {
+            if (chemin->taille > 0) 
+            {
+                chemin->chemin[j][0] = chemin->chemin[chemin->taille - 1][0];
+                chemin->chemin[j][1] = chemin->chemin[chemin->taille - 1][1];
+            }
+            else 
+            {
+                chemin->chemin[j][0] = 0;
+                chemin->chemin[j][1] = 0;
+            }
+        }
+    }
+    fclose(f);
+    PositionnePlayerOnPlateau(*listeRoi, jeu);
+    PositionnePlayerOnPlateau(*listeHorde,jeu);
+    printf("Partie sequentielle chargee !\n");
+}

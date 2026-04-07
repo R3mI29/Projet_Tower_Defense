@@ -91,4 +91,8 @@ int nbTours(TListePlayer lst);
 void ViderListe(TListePlayer *liste, TplateauJeu jeu);
 void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);
 void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin *chemin);
+void ecrireUnite(FILE *f, Tunite *u);
+void lireUnite(FILE *f, Tunite *u);
+void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);
+void ChargerSequentiel(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin*chemin);
 #endif // TOWERDEFEND_H_INCLUED
