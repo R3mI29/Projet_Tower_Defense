@@ -82,7 +82,7 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
 //
 // Param = NULL
 //
-// Return =  int ** (liste des cases du chemin qui sont faites de manière aléatoire)
+// Return =  Tchemin (liste des cases du chemin qui sont faites de manière aléatoire, et la taille de ce chemin)
 //
 // Complexité = Espace = O(n)
 //              Temps = O(n)
@@ -192,7 +192,6 @@ Tchemin initChemin()
         }
     }
     chemin.taille = i;
-    
     return chemin;
 }
 
@@ -229,6 +228,7 @@ void affichePlateauConsole(TplateauJeu jeu, int largeur, int hauteur){
         printf("\n");
     }
 }
+
 
 Tunite *creeTourSol(int posx, int posy){
     Tunite *nouv = (Tunite*)malloc(sizeof(Tunite));
@@ -563,7 +563,7 @@ TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
     int posx = UniteAttaquante->posX;
     int posy = UniteAttaquante->posY;
     int porte = UniteAttaquante->portee;
-    for (int i = (-1)*porte; i <= porte; i++)
+    for (int i = (-1)*porte; i <= porte; i++) //On fait *(-1), car on veut commencer par le négatif. Exemple si porte = 2 : i = -2 ; i = -1 ; i = 0 ;...
     {
         for (int z = (-1)*porte; z <= porte; z++)
         {
@@ -720,8 +720,7 @@ void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu
 // Return = void (le changement se fais dans l'unite cible)
 //
 //
-// Complexité = Espace = O(1)
-//              Temps = O(1)
+// Complexité = Complexité de la fonction "line" (l.296 maSDL.c)
 //
 //*************************************************************************************************************//
 void combat(SDL_Surface * surface, Tunite * UniteAttaquante, Tunite * UniteCible)
@@ -740,7 +739,7 @@ void combat(SDL_Surface * surface, Tunite * UniteAttaquante, Tunite * UniteCible
 // Fonction     retirerAffichage
 //
 //
-// Param = 
+// Param = Tunite * unite (L'unité qui doit être retirée du plateau)
 //
 //
 // Return = void (le changement se fais dans le jeu)
@@ -761,19 +760,18 @@ void retirerAffichage(Tunite * unite, TplateauJeu jeu)
 // Fonction     EstSurChemin
 //
 //
-// Param = int* coord
-//         int** chemin
-//
+// Param = int posx (La position sur l'axe x)
+//         int posy (La position sur l'axe y)
+//         Tchemin chemin (le chemin sur lequel on regarde la présence)
 //
 //
 // Return = bool
 //
 //
-// Complexité =
-//
+// Complexité = Espace = O(1)
+//              Temps = O(n)
 //
 //*************************************************************************************************************//
-
 bool EstSurChemin(int posx, int posy, Tchemin chemin){
     for(int k = 0; k < chemin.taille; k++){
         if (chemin.chemin[k][0] == posx && chemin.chemin[k][1] == posy){
@@ -782,6 +780,7 @@ bool EstSurChemin(int posx, int posy, Tchemin chemin){
     }
     return false;
 }
+
 
 //*************************************************************************************************************//
 //
@@ -811,7 +810,8 @@ void CalculeScoreEmplacement(Tunite emplacement){
 // Fonction     CreationUniteAleaHorde
 //
 //
-// Param = TListePlayer (La liste de la horde)
+// Param = TListePlayer * lst(La liste de la horde)
+//         Tchemin chemin (le chemin pour placer les unités dessus)
 //
 //
 //
@@ -855,8 +855,9 @@ void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin)
 // Fonction     CreationUniteAleaRoi
 //
 //
-// Param = TListePlayer (La liste du Roi)
-//
+// Param =  TListePlayer (La liste du Roi)
+//          TplateauJeu jeu (Le plateau de jeu)
+//          Tchemin chemin (Le chemin pour ne pas placer les tours dessus)
 //
 //
 // Return = void (le changement se fais dans la liste )
@@ -902,6 +903,7 @@ void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin)
 //          TListePlayer * tempHorde(La liste de la horde)
 //          TplateauJeu jeu (Le plateau qui est affiché et sur lequel les unités évoluent)
 //          Tchemin (Le Chemin que doivent prendre les unités de la horde)
+//          SDL_Surface * surface (Param utilisé pour dessineAttaque)
 //
 //
 // Return = void (le changement se fais dans les listes et sur le jeu)
@@ -950,9 +952,25 @@ void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, 
 
 
 
+//*************************************************************************************************************//
+//
+// Fonction     nbTours
+//
+//
+// Param =  TListePlayer * lst(La liste du Roi)
+//
+//
+// Return = int (le nombre de tours sur le plateau de jeu)
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(1)
+//
+//
+//*************************************************************************************************************//
 int nbTours(TListePlayer lst)
 {
-    int res = -1;
+    int res = -1; // car il y a la tour du roi
     while (lst != NULL)
     {
         lst = lst->suiv;
@@ -962,7 +980,25 @@ int nbTours(TListePlayer lst)
 }
 
 
-void ViderListe(TListePlayer *liste, TplateauJeu jeu){ 
+
+//*************************************************************************************************************//
+//
+// Fonction     ViderListe
+//
+//
+// Param =  TListePlayer * liste (La liste à vider)
+//          TplateauJeu jeu (retirer les unités de la liste de l'affichage sur le plateau)
+//
+//
+// Return = void (La liste est vidée par des free et est retirer de l'affiche sur le plateau donc pas de return)
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(n)
+//
+//*************************************************************************************************************//
+void ViderListe(TListePlayer *liste, TplateauJeu jeu)
+{ 
     TListePlayer temp;
     while (*liste != NULL)
     {
@@ -975,7 +1011,26 @@ void ViderListe(TListePlayer *liste, TplateauJeu jeu){
 }
 
 
-void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin){
+
+//*************************************************************************************************************//
+//
+// Fonction     SauvegarderBinaire
+//
+//
+// Param =  TListePlayer listeRoi (La liste du roi pour la sauvegarder)
+//          TListePlayer listeHorde (La liste de la horde pour la sauvegarder)
+//          Tchemin chemin (Le chemin pour le sauvgarder)
+//
+//
+// Return = void (création du fichier de sauvegarde donc pas de valeurs return)
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(n)
+//
+//*************************************************************************************************************//
+void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin)
+{
     FILE *f = fopen("partiebin.tdb", "wb");
     if (f == NULL) 
     {
@@ -986,7 +1041,8 @@ void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin 
     TListePlayer temp = listeRoi;
     while(temp)
     {
-        nbRoi++; temp = temp->suiv;
+        nbRoi++;
+        temp = temp->suiv;
     }
     fwrite(&nbRoi, sizeof(int), 1, f);   
     temp = listeRoi;
@@ -1018,7 +1074,24 @@ void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin 
 }
 
 
-
+//*************************************************************************************************************//
+//
+// Fonction     ChargerBinaire
+//
+//
+// Param =  TListePlayer *listeRoi (La liste du roi pour la vider)
+//          TListePlayer *listeHorde (La liste de la horde pour la vider)
+//          Tchemin *chemin (Le chemin pour le vider)
+//          TplateauJeu jeu (Le jeu pour le vider)
+//
+//
+// Return = void (Chargement du fichier binaire)
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(n)
+//
+//*************************************************************************************************************//
 void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin *chemin)
 {
     FILE *f = fopen("partiebin.tdb", "rb");
@@ -1046,7 +1119,7 @@ void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJe
         fread(u, sizeof(Tunite), 1, f);
         AjouterUnite(listeHorde, u);
     }
-if (chemin->chemin != NULL) 
+    if (chemin->chemin != NULL) 
     {
         for (int j = 0; j < NBCOORDPARCOURS; j++) 
         {
@@ -1085,11 +1158,44 @@ if (chemin->chemin != NULL)
 }
 
 
+//*************************************************************************************************************//
+//
+// Fonction     ecrireUnite
+//
+//
+// Param =  FILE *f (Le fichier où va être écrite l'unite)
+//          Tunite *u (L'unite qui va être écrite)
+//
+//
+// Return = void (sert à écrire une unité et toute ses caractéristiques dans le jeu)
+//
+//
+// Complexité = Temps = O(1)
+//              Espace = O(1)
+//
+//*************************************************************************************************************//
 void ecrireUnite(FILE *f, Tunite *u)
 {
     fprintf(f, "%d %d %d %d %f %d %d %f %d %d %d\n",(int)u->nom, (int)u->cibleAttaquable, (int)u->maposition,u->pointsDeVie, u->vitesseAttaque, u->degats, u->portee,u->vitessedeplacement, u->posX, u->posY, u->peutAttaquer);
 }
 
+
+//*************************************************************************************************************//
+//
+// Fonction     lireUnite
+//
+//
+// Param =  FILE *f (Le fichier qui va être lu)
+//          Tunite *u (L'unite à qui on va donner les caractéristiques de ce qui est écrit dans le fichier de sauvegarde)
+//
+//
+// Return = void (Lecture du fichier et prise de la première unite du fichier)
+//
+//
+// Complexité = Temps = O(1)
+//              Espace = O(1)
+//
+//*************************************************************************************************************//
 void lireUnite(FILE *f, Tunite *u)
 {
     int nomInt, cibleInt, maposInt;
@@ -1100,6 +1206,23 @@ void lireUnite(FILE *f, Tunite *u)
 }
 
 
+//*************************************************************************************************************//
+//
+// Fonction     SauvegarderSequentiel
+//
+//
+// Param =  TListePlayer listeRoi (La liste du roi pour la sauvegarder)
+//          TListePlayer listeHorde (La liste de la horde pour la sauvegarder)
+//          Tchemin chemin (Le chemin pour le sauvgarder)
+//
+//
+// Return = void (création du fichier de sauvegarde donc pas de valeurs return)
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(n)
+//
+//*************************************************************************************************************//
 void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin)
 {
     FILE *f = fopen("partieseq.tds", "w");
@@ -1144,6 +1267,25 @@ void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchem
     printf("Partie sauvegardee en sequentiel !\n");
 }
 
+
+//*************************************************************************************************************//
+//
+// Fonction     ChargerSequentiel
+//
+//
+// Param =  TListePlayer * listeRoi (La liste du roi pour la vider)
+//          TListePlayer * listeHorde (La liste de la horde pour la vider)
+//          TplateauJeu jeu (le plateau de jeu sur lequel les unitées vont être retirer)
+//          Tchemin * chemin (Le chemin pour le vider)
+//
+//
+// Return = void (chargement du fichier de sauvegarde, donc pas de valeurs renvoyées)
+//
+//
+// Complexité = Temps = O(n)
+//              Espace = O(n)
+//
+//*************************************************************************************************************//
 void ChargerSequentiel(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin*chemin)
 {
     FILE *f = fopen("partieseq.tds", "r");

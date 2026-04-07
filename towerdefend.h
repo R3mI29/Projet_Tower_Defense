@@ -81,12 +81,15 @@ bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
 void combat(SDL_Surface * surface,Tunite * UniteAttaquante, Tunite * UniteCible);
-void retirerAffichage(Tunite * unite, TplateauJeu jeu);
-bool EstSurChemin(int posx, int posy, Tchemin chemin);
-void CalculeScoreEmplacement(Tunite emplacement);
-void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin);
-void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin);
-void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface);
+/*  Kernel  */
+
+/*  Fonctions du jeu  */
+void retirerAffichage(Tunite * unite, TplateauJeu jeu); // Retire les unite sur le plateau de jeu
+bool EstSurChemin(int posx, int posy, Tchemin chemin); // Indique si la position (x,y) est sur le chemin
+void CalculeScoreEmplacement(Tunite emplacement); // Renvoie le score d'emplacement de toutes les cases du jeu (le nombre de cases de chamin dans à porté)
+void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin); // Crée une tour aléatoire pour le roi
+void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin); // Crée une unité aléatoire pour la horde
+void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface); // 
 int nbTours(TListePlayer lst);
 void ViderListe(TListePlayer *liste, TplateauJeu jeu);
 void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);
