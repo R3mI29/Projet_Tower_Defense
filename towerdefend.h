@@ -39,7 +39,7 @@ typedef struct {
     //struct Tunite *cible;   //NULL si pas de cible. mettre � jour ce pointeur permet l'aninamtion (simpliste certe) du tir
     //non utilis� au final -> utiliser directement dessineAttaque
 
-    //int score_emplacement;  //un clin d'oeil pour suscister une id�e de tri
+    int score_emplacement;  //un clin d'oeil pour suscister une id�e de tri
 } Tunite;
 
 typedef struct T_cell{
