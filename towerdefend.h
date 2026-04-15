@@ -89,13 +89,15 @@ bool EstSurChemin(int posx, int posy, Tchemin chemin); // Indique si la position
 void CalculeScoreEmplacement(Tunite emplacement); // Renvoie le score d'emplacement de toutes les cases du jeu (le nombre de cases de chamin dans à porté)
 void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin); // Crée une tour aléatoire pour le roi
 void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin); // Crée une unité aléatoire pour la horde
-void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface); // 
-int nbTours(TListePlayer lst);
-void ViderListe(TListePlayer *liste, TplateauJeu jeu);
-void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);
-void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin *chemin);
-void ecrireUnite(FILE *f, Tunite *u);
-void lireUnite(FILE *f, Tunite *u);
-void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);
-void ChargerSequentiel(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin*chemin);
+void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface); // La focntion qui fait fonctionner le jeu en appelant les autres
+int nbTours(TListePlayer lst);// Compte le nombre de tours, sauf la tour du roi. Comme ça on peut limiter le nombre de tours
+void ViderListe(TListePlayer *liste, TplateauJeu jeu);// Fonction qui est utilisée quand on charge une sauvgarde, on l'utilise pour vider les listes de la partie actuel et permet de charger la sauvegarde
+void SauvegarderBinaire(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);// Fonction qui permet de sauvegarder en fichier binaire la partie en cours.
+void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin *chemin);// Fonction qui permet de récupérer les valeurs du fichier de sauvegarde binaire, et les rentrer dans les listes du jeu
+void ecrireUnite(FILE *f, Tunite *u);// Fonction qui permet d'écrire les statistiques d'une unité en séquentiel
+void lireUnite(FILE *f, Tunite *u);// Fonction qui permet de lire les statistiques d'une unité en séquentiel
+void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchemin chemin);// Fonction qui permet de sauvegarder en fichier sequentiel la partie en cours.
+void ChargerSequentiel(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJeu jeu, Tchemin*chemin);// Fonction qui permet de récupérer les valeurs du fichier de sauvegarde en sequentiel, et les rentrer dans les listes du jeu
+
+
 #endif // TOWERDEFEND_H_INCLUED
