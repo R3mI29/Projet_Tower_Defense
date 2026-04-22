@@ -799,10 +799,43 @@ bool EstSurChemin(int posx, int posy, Tchemin chemin){
 //
 //*************************************************************************************************************//
 
-void CalculeScoreEmplacement(Tunite emplacement){
-
-
+void CalculeScoreEmplacement(Tunite emplacement, Tchemin chemin ){
+    int score;
+    for (int k; k < chemin.taille; k++){
+        if (emplacement.portee * emplacement.portee <= (chemin.chemin[0] * chemin.chemin[0]) + (chemin.chemin[1] * chemin.chemin[1])){
+            score += 1
+        }
+    }
+    emplacement.score_emplacement = score;
 }
+
+//*************************************************************************************************************//
+//
+// Fonction     CalculeScoreEmplacement
+//
+//
+// Param = T_unite
+//
+//
+//
+// Return = void (le changement se fais dans l'unite )
+//
+//
+// Complexité =
+//
+//
+//*************************************************************************************************************//
+
+ void CreationListeEmplacements(TListePlayer listeEmplacements, Tchemin chemin, TListePlayer listeroi ){
+    for( int k; k < LARGEURJEU; k++){
+        for(int j; j < HAUTEURJEU; j++){
+            if ( !EstSurChemin(k , j , chemin)){
+                
+            }
+        }
+    }
+
+ }
 
 
 //*************************************************************************************************************//

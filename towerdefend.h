@@ -86,7 +86,7 @@ void combat(SDL_Surface * surface,Tunite * UniteAttaquante, Tunite * UniteCible)
 /*  Fonctions du jeu  */
 void retirerAffichage(Tunite * unite, TplateauJeu jeu); // Retire les unite sur le plateau de jeu
 bool EstSurChemin(int posx, int posy, Tchemin chemin); // Indique si la position (x,y) est sur le chemin
-void CalculeScoreEmplacement(Tunite emplacement); // Renvoie le score d'emplacement de toutes les cases du jeu (le nombre de cases de chamin dans à porté)
+void CalculeScoreEmplacement(Tunite emplacement, Tchemin chemin); // Renvoie le score d'emplacement de toutes les cases du jeu (le nombre de cases de chamin dans à porté)
 void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin); // Crée une tour aléatoire pour le roi
 void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin); // Crée une unité aléatoire pour la horde
 void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface); // La focntion qui fait fonctionner le jeu en appelant les autres
