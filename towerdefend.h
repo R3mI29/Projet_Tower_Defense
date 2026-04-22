@@ -76,7 +76,7 @@ void AjouterUnite(TListePlayer *player, Tunite *nouvelleUnite);
 void DeplacerHorde(Tunite * unite, Tchemin chemin, TplateauJeu jeu);
 bool CaseOccupe(int posx, int posy, TplateauJeu jeu);
 bool tourRoiDetruite(TListePlayer player);
-TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante);
+TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante, TListePlayer horde);
 bool ciblable(Tunite * uniteAttaquante, Tunite * unitecible);
 bool EstEnnemi(Tunite * uniteAttaquante, Tunite * uniteCible);
 void supprimerUnite(TListePlayer *player, Tunite *UniteDetruite, TplateauJeu jeu);
@@ -86,8 +86,10 @@ void combat(SDL_Surface * surface,Tunite * UniteAttaquante, Tunite * UniteCible)
 /*  Fonctions du jeu  */
 void retirerAffichage(Tunite * unite, TplateauJeu jeu); // Retire les unite sur le plateau de jeu
 bool EstSurChemin(int posx, int posy, Tchemin chemin); // Indique si la position (x,y) est sur le chemin
-void CalculeScoreEmplacement(Tunite emplacement, Tchemin chemin); // Renvoie le score d'emplacement de toutes les cases du jeu (le nombre de cases de chamin dans à porté)
-void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin); // Crée une tour aléatoire pour le roi
+void CalculeScoreEmplacement(Tunite *emplacement, Tchemin chemin); // Renvoie le score d'emplacement de toutes les cases du jeu (le nombre de cases de chamin dans à porté)
+void CreationListeEmplacements(TListePlayer *listeEmplacements, Tchemin chemin , char type[10]); // crée la liste d'emplacements pour les tours
+void triListeEmplacements(TListePlayer *listeEmplacements); //trie la liste d'emplacement des tours de manière croissante
+void CreationTour(TListePlayer * lst, TplateauJeu jeu, TListePlayer *listEmpTourAir, TListePlayer *listEmpTourSol); // Crée une tour pour le roi
 void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin); // Crée une unité aléatoire pour la horde
 void TourDeJeu(TListePlayer* pRoi, TListePlayer *pHorde, TplateauJeu jeu, Tchemin chemin, SDL_Surface * surface); // La focntion qui fait fonctionner le jeu en appelant les autres
 int nbTours(TListePlayer lst);// Compte le nombre de tours, sauf la tour du roi. Comme ça on peut limiter le nombre de tours

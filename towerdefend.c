@@ -5,7 +5,7 @@
 #include "SDL.h"
 #include "maSDL.h"
 #include "towerdefend.h"
-
+#include <string.h>
 
 
 //typedef Tunite* ** TplateauJeu;
@@ -557,27 +557,19 @@ bool tourRoiDetruite(TListePlayer player)
 //              Temps = O(n²)
 //
 //*************************************************************************************************************//
-TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante)
+TListePlayer quiEstAPortee(TplateauJeu jeu, Tunite *UniteAttaquante, TListePlayer horde)
 {
     TListePlayer lst = NULL;
-    int posx = UniteAttaquante->posX;
-    int posy = UniteAttaquante->posY;
-    int porte = UniteAttaquante->portee;
-    for (int i = (-1)*porte; i <= porte; i++) //On fait *(-1), car on veut commencer par le négatif. Exemple si porte = 2 : i = -2 ; i = -1 ; i = 0 ;...
-    {
-        for (int z = (-1)*porte; z <= porte; z++)
-        {
-            int cibleX = posx - i;
-            int cibleY = posy - z;
-            if (cibleX >= 0 && cibleX <LARGEURJEU && cibleY >= 0 && cibleY < HAUTEURJEU) 
-            {
-                Tunite *current = jeu[cibleX][cibleY];
-                if ((current != NULL) && (ciblable(UniteAttaquante, current)) && EstEnnemi(UniteAttaquante, current))
-                {
-                    AjouterUnite(&lst, current);
-                }
-            }
+    TListePlayer current = horde;
+    
+    while(current != NULL){
+        int dx = UniteAttaquante->posX - current->pdata->posX;
+        int dy = UniteAttaquante->posY - current->pdata->posY;
+        
+        if (UniteAttaquante->portee * UniteAttaquante->portee >= (dx * dx) + (dy * dy)){
+            AjouterUnite(&lst, current->pdata);
         }
+        current = current->suiv;
     }
     return lst;
 }
@@ -798,16 +790,54 @@ bool EstSurChemin(int posx, int posy, Tchemin chemin){
 //
 //
 //*************************************************************************************************************//
-
-void CalculeScoreEmplacement(Tunite emplacement, Tchemin chemin ){
-    int score;
-    for (int k; k < chemin.taille; k++){
-        if (emplacement.portee * emplacement.portee <= (chemin.chemin[0] * chemin.chemin[0]) + (chemin.chemin[1] * chemin.chemin[1])){
-            score += 1
+void CalculeScoreEmplacement(Tunite *emplacement, Tchemin chemin){
+    int score = 0;
+    for (int k = 0; k < chemin.taille; k++){
+        int dx = emplacement->posX - chemin.chemin[k][0];
+        int dy = emplacement->posY - chemin.chemin[k][1];
+        if (emplacement->portee * emplacement->portee >= (dx * dx) + (dy * dy)){
+            score += 1;
         }
     }
-    emplacement.score_emplacement = score;
+    emplacement->score_emplacement = score;
 }
+
+//*************************************************************************************************************//
+//
+// Fonction     CreationListeEmplacements
+//
+//
+// Param = TListePlayer listeEmplacements
+//                      Tchemin chemin 
+//                      char type[10]      ( "sol" ou "air") sert à savoir quel type de tour on veut
+//
+//
+//
+// Return = void 
+//
+//
+// Complexité =
+//
+//
+//*************************************************************************************************************//
+
+ void CreationListeEmplacements(TListePlayer *listeEmplacements, Tchemin chemin , char type[10]){
+    for( int k = 0; k < LARGEURJEU; k++){
+        for(int j = 0; j < HAUTEURJEU; j++){
+            if ( !(EstSurChemin(k , j , chemin))){
+                Tunite *tour;
+                if (strcmp(type, "air") == 0){
+                    tour = creeTourAir(k,j);
+                }
+                else if(strcmp(type, "sol") == 0){
+                    tour = creeTourSol(k,j);
+                }
+                CalculeScoreEmplacement(tour, chemin);
+                AjouterUnite(listeEmplacements, tour);
+            }
+        }
+    }
+ }
 
 //*************************************************************************************************************//
 //
@@ -825,17 +855,31 @@ void CalculeScoreEmplacement(Tunite emplacement, Tchemin chemin ){
 //
 //
 //*************************************************************************************************************//
+void triListeEmplacements(TListePlayer *listeEmplacements){
+    if (listeEmplacements == NULL || *listeEmplacements == NULL || (*listeEmplacements)->suiv == NULL) {
+        return ; 
+    }
+    int echange_effectue = 1;
+    TListePlayer current;
 
- void CreationListeEmplacements(TListePlayer listeEmplacements, Tchemin chemin, TListePlayer listeroi ){
-    for( int k; k < LARGEURJEU; k++){
-        for(int j; j < HAUTEURJEU; j++){
-            if ( !EstSurChemin(k , j , chemin)){
+    while (echange_effectue == 1) {
+        echange_effectue = 0; 
+        current = *listeEmplacements;
+
+        while (current->suiv != NULL) {
+            if (current->pdata->score_emplacement < current->suiv->pdata->score_emplacement) {
                 
+                Tunite *temp = current->pdata;
+                current->pdata = current->suiv->pdata;
+                current->suiv->pdata = temp;
+                
+                echange_effectue = 1; 
             }
+            current = current->suiv; 
         }
     }
+}
 
- }
 
 
 //*************************************************************************************************************//
@@ -885,12 +929,13 @@ void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin)
 
 //*************************************************************************************************************//
 //
-// Fonction     CreationUniteAleaRoi
+// Fonction     CreationTour
 //
 //
 // Param =  TListePlayer (La liste du Roi)
 //          TplateauJeu jeu (Le plateau de jeu)
-//          Tchemin chemin (Le chemin pour ne pas placer les tours dessus)
+//          TListePlayer *listEmpTourAir
+//           TListePlayer *listEmpTourSol
 //
 //
 // Return = void (le changement se fais dans la liste )
@@ -902,26 +947,40 @@ void CreationUniteAleaHorde(TListePlayer * lst, Tchemin chemin)
 //
 //*************************************************************************************************************//
 
-void CreationUniteAleaRoi(TListePlayer * lst, TplateauJeu jeu, Tchemin chemin)
-{
-    int Prob = rand()%101;
-    int Aleaposx = rand()%11;                   // Début de la zone qui va partir après l'optimisation du placement
-    int Aleaposy = rand()%19;
-    while (jeu[Aleaposx][Aleaposy] != NULL || EstSurChemin(Aleaposx, Aleaposy, chemin))
-    {
-        Aleaposx = rand()%11;
-        Aleaposy = rand()%19;
-    }                                           // Fin de la zone
-    if (Prob <= PROBROI)
-    {
-        int uniteAlea = rand()%2;
-        if (uniteAlea == 0)
-        {
-                AjouterUnite(lst, creeTourAir(Aleaposx, Aleaposy)); //AjouterUnite à une complexite de Temps de O(n)
+void CreationTour(TListePlayer * lst, TplateauJeu jeu, TListePlayer *listEmpTourAir, TListePlayer *listEmpTourSol)
+{                                        
+    int randomdom = rand() % 2;
+    
+    if (randomdom == 1) {
+        if (*listEmpTourAir != NULL) {
+            TListePlayer cible = *listEmpTourAir; 
+            
+            if (jeu[cible->pdata->posX][cible->pdata->posY] == NULL) {
+                AjouterUnite(lst, cible->pdata);
+                *listEmpTourAir = cible->suiv; 
+                free(cible);    
+            }
+            else {
+                free(cible->pdata);
+                *listEmpTourAir = cible->suiv;
+                free(cible);
+            }
         }
-        else if (uniteAlea == 1)
-        {
-                AjouterUnite(lst, creeTourSol(Aleaposx, Aleaposy));
+    }
+    else {
+        if (*listEmpTourSol != NULL) {
+            TListePlayer cible = *listEmpTourSol;
+            
+            if (jeu[cible->pdata->posX][cible->pdata->posY] == NULL) {
+                AjouterUnite(lst, cible->pdata);
+                *listEmpTourSol = cible->suiv;
+                free(cible);    
+            }
+            else {
+                free(cible->pdata);
+                *listEmpTourSol = cible->suiv;
+                free(cible);
+            }
         }
     }
 }
@@ -952,7 +1011,7 @@ void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, 
     TListePlayer actuRoi = *tempRoi;
     while (actuRoi != NULL)
     {
-        TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata);
+        TListePlayer cibleRoi = quiEstAPortee(jeu, actuRoi->pdata, (*tempHorde));
         if (cibleRoi != NULL)
         {
             combat(surface,actuRoi->pdata, cibleRoi->pdata);
@@ -973,7 +1032,7 @@ void TourDeJeu(TListePlayer *tempRoi, TListePlayer *tempHorde, TplateauJeu jeu, 
             retirerAffichage(actuHorde->pdata, jeu);
             DeplacerHorde(actuHorde->pdata, chemin, jeu);
             PositionnePlayerOnPlateau(actuHorde, jeu);
-            TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata);
+            TListePlayer cibleHorde = quiEstAPortee(jeu, actuHorde->pdata, (*tempRoi));
             if (cibleHorde != NULL)
             {
                 combat(surface,actuHorde->pdata, cibleHorde->pdata);

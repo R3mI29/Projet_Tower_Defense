@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <string.h>
 
 
 /*--------- Main ---------------------*/
@@ -70,11 +70,19 @@ int main(int argc, char* argv[])
         /*Les listes*/
         TListePlayer listeRoi = NULL;
         TListePlayer listHorde = NULL;
+        TListePlayer listEmpTourAir = NULL;
+        TListePlayer listEmpTourSol = NULL;
         /*Tour du Roi*/
         int posx = tabParcours.chemin[tabParcours.taille-1][0];
         int posy = tabParcours.chemin[tabParcours.taille-1][1];
         AjouterUnite(&listeRoi, creeTourRoi(posx, posy -1));    // Posy -1, car on veut la placer sur la case juste au dessus de la fin du chemin.
         PositionnePlayerOnPlateau(listeRoi, jeu);
+        CreationListeEmplacements(&listEmpTourAir, tabParcours, "air");
+        CreationListeEmplacements(&listEmpTourSol, tabParcours, "sol");
+        triListeEmplacements(&listEmpTourAir);
+        triListeEmplacements(&listEmpTourSol);
+
+
         // FIN de vos variables                                               */
         /**********************************************************************/
 
@@ -93,9 +101,17 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
                 CreationUniteAleaHorde(&listHorde,tabParcours);
-                if (nbTours(listeRoi) < (LARGEURJEU*HAUTEURJEU)-tabParcours.taille) // la taille de fenêtre sans la taille du chemin
+                
+
+                
+                int probTour = rand() % 101; 
+
+                if (probTour <= PROBROI) 
                 {
-                        CreationUniteAleaRoi(&listeRoi, jeu, tabParcours);
+                        if (nbTours(listeRoi) < (LARGEURJEU*HAUTEURJEU)-tabParcours.taille) 
+                        {
+                                CreationTour(&listeRoi, jeu, &listEmpTourAir, &listEmpTourSol);
+                        }
                 }
                 bool tour = false;
                 while (!tour)
@@ -123,23 +139,54 @@ int main(int argc, char* argv[])
                 //LECTURE DE CERTAINES TOUCHES POUR LANCER LES RESTAURATIONS ET SAUVEGARDES
                 const Uint8* pKeyStates = SDL_GetKeyboardState(NULL);
                 if ( pKeyStates[SDL_SCANCODE_V] ){
-                        /* Ajouter vos appels de fonctions ci-dessous qd le joueur appuye sur V */
                         ChargerSequentiel(&listeRoi, &listHorde, jeu, &tabParcours);
-                        // APPELEZ ICI VOTRE FONCTION DE SAUVEGARDE/RESTAURATION DEMANDEE.
-                        message("Sauvegarde","Placer ici votre fonction de restauration/sauvegarde");
+                        
+                        while(listEmpTourAir != NULL) {
+                            TListePlayer temp = listEmpTourAir;
+                            listEmpTourAir = listEmpTourAir->suiv;
+                            free(temp->pdata); free(temp);
+                        }
+                        while(listEmpTourSol != NULL) {
+                            TListePlayer temp = listEmpTourSol;
+                            listEmpTourSol = listEmpTourSol->suiv;
+                            free(temp->pdata); free(temp);
+                        }
 
-                        //Ne pas modifiez les 4 lignes ci-dessous
+                        CreationListeEmplacements(&listEmpTourAir, tabParcours, "air");
+                        CreationListeEmplacements(&listEmpTourSol, tabParcours, "sol");
+                        triListeEmplacements(&listEmpTourAir);
+                        triListeEmplacements(&listEmpTourSol);
+
+
+                        message("Sauvegarde","Partie sequentielle chargee avec succes");
+
                         efface_fenetre(pWinSurf);
                         prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
                         maj_fenetre(pWindow);
                         SDL_Delay(300);
                 }
-                if ( pKeyStates[SDL_SCANCODE_C] ){
-                        /* Ajouter vos appels de fonctions ci-dessous qd le joueur appuye sur C */
-                        ChargerBinaire(&listeRoi, &listHorde, jeu, &tabParcours);
-                        message("Sauvegarde","Placer ici votre fonction de restauration/sauvegarde");
 
-                        //Ne pas modifiez les 4 lignes ci-dessous
+                if ( pKeyStates[SDL_SCANCODE_C] ){
+                        ChargerBinaire(&listeRoi, &listHorde, jeu, &tabParcours);
+                        
+                        while(listEmpTourAir != NULL) {
+                            TListePlayer temp = listEmpTourAir;
+                            listEmpTourAir = listEmpTourAir->suiv;
+                            free(temp->pdata); free(temp);
+                        }
+                        while(listEmpTourSol != NULL) {
+                            TListePlayer temp = listEmpTourSol;
+                            listEmpTourSol = listEmpTourSol->suiv;
+                            free(temp->pdata); free(temp);
+                        }
+                        CreationListeEmplacements(&listEmpTourAir, tabParcours, "air");
+                        CreationListeEmplacements(&listEmpTourSol, tabParcours, "sol");
+                        triListeEmplacements(&listEmpTourAir);
+                        triListeEmplacements(&listEmpTourSol);
+
+
+                        message("Sauvegarde","Partie binaire chargee avec succes");
+
                         efface_fenetre(pWinSurf);
                         prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
                         maj_fenetre(pWindow);
