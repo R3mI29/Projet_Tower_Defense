@@ -50,9 +50,6 @@ int main(int argc, char* argv[])
     {
         TplateauJeu jeu = AlloueTab2D(LARGEURJEU,HAUTEURJEU);
         initPlateauAvecNULL(jeu,LARGEURJEU,HAUTEURJEU);
-        affichePlateauConsole(jeu,LARGEURJEU,HAUTEURJEU);
-
-
 
         prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
         maj_fenetre(pWindow);
@@ -90,8 +87,6 @@ int main(int argc, char* argv[])
         int cont = 1;
         while ( cont != 0 )
         {
-                TListePlayer tempHorde = listHorde;
-                TListePlayer tempRoi = listeRoi;
                 SDL_PumpEvents();
                 efface_fenetre(pWinSurf);
                 prepareAllSpriteDuJeu(jeu,tabParcours.chemin,LARGEURJEU,HAUTEURJEU,TabSprite,pWinSurf);
@@ -101,12 +96,8 @@ int main(int argc, char* argv[])
                 /*                                                                     */
                 //APPELEZ ICI VOS FONCTIONS QUI FONT EVOLUER LE JEU                    */
                 CreationUniteAleaHorde(&listHorde,tabParcours);
-                
-
-                
                 int probTour = rand() % 101; 
-
-                if (probTour <= PROBROI) 
+                if (probTour < PROBROI) 
                 {
                         if (nbTours(listeRoi) < (LARGEURJEU*HAUTEURJEU)-tabParcours.taille) 
                         {
@@ -119,7 +110,7 @@ int main(int argc, char* argv[])
                         TourDeJeu(&listeRoi, &listHorde, jeu, tabParcours, pWinSurf);
                         PositionnePlayerOnPlateau(listeRoi, jeu);
                         tour = true;
-                        if (tourRoiDetruite(tempRoi))
+                        if (tourRoiDetruite(listeRoi))
                         {
                                 message("Fin de la partie","Vous avez perdu !!!!");
                                 printf("\nLa tour du roi est detruite fin du jeu\n");

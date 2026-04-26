@@ -8,7 +8,8 @@
 #include <string.h>
 
 
-//typedef Tunite* ** TplateauJeu;
+
+typedef Tunite* ** TplateauJeu;
 
 TplateauJeu AlloueTab2D(int largeur, int hauteur){
     TplateauJeu jeu;
@@ -91,20 +92,17 @@ void ecritCheminVerslaGauche(int **chemin, int *ichemin, int *xdepart, int *ydep
 Tchemin initChemin()
 {
     Tchemin chemin;
-    srand(time(NULL)); // Toujours mieux dans le main() si possible !
-    
+    srand(time(NULL));
     chemin.chemin = (int**)malloc(sizeof(int*)*NBCOORDPARCOURS);
     for (int j=0;j<NBCOORDPARCOURS;j++)
     {
         chemin.chemin[j] = (int*)malloc(sizeof(int)*2);
     }
-    
     int ydepart = 18;
     int xdepart = 5;
     int i = 0;
     int test = 1;
     int distanceMaxRestante = NBCOORDPARCOURS;
-    
     while (distanceMaxRestante > 0)
     {
         if (ydepart <= 1) 
@@ -1213,9 +1211,9 @@ void ChargerBinaire(TListePlayer *listeRoi, TListePlayer *listeHorde, TplateauJe
     }
     if (chemin->chemin != NULL) 
     {
-        for (int j = 0; j < NBCOORDPARCOURS; j++) 
+        for (int i = 0; i < NBCOORDPARCOURS; i++) 
         {
-            free(chemin->chemin[j]);
+            free(chemin->chemin[i]);
         }
         free(chemin->chemin);
     }
@@ -1333,7 +1331,8 @@ void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchem
     temp = listeRoi;
     while (temp)
     {
-        ecrireUnite(f, temp->pdata); temp = temp->suiv;
+        ecrireUnite(f, temp->pdata); *
+        temp = temp->suiv;
     }
     int nbHorde = 0;
     temp = listeHorde;
