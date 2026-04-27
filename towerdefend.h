@@ -6,8 +6,8 @@
 #define NBCOORDPARCOURS 34
 #define X 0
 #define Y 1
-#define PROBHORDE 100
-#define PROBROI 0
+#define PROBHORDE 15
+#define PROBROI 5
 
 typedef enum{tourSol, tourAir, tourRoi, archer, chevalier, dragon, gargouille} TuniteDuJeu;
 typedef enum{sol, solEtAir, air } Tcible;

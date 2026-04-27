@@ -950,15 +950,17 @@ void CreationTour(TListePlayer * lst, TplateauJeu jeu, TListePlayer *listEmpTour
     int randomdom = rand() % 2;
     
     if (randomdom == 1) {
-        if (*listEmpTourAir != NULL) {
+        if (*listEmpTourAir != NULL)
+        {
             TListePlayer cible = *listEmpTourAir; 
-            
-            if (jeu[cible->pdata->posX][cible->pdata->posY] == NULL) {
+            if (jeu[cible->pdata->posX][cible->pdata->posY] == NULL)
+            {
                 AjouterUnite(lst, cible->pdata);
                 *listEmpTourAir = cible->suiv; 
                 free(cible);    
             }
-            else {
+            else
+            {
                 free(cible->pdata);
                 *listEmpTourAir = cible->suiv;
                 free(cible);
@@ -1331,8 +1333,8 @@ void SauvegarderSequentiel(TListePlayer listeRoi, TListePlayer listeHorde, Tchem
     temp = listeRoi;
     while (temp)
     {
-        ecrireUnite(f, temp->pdata); *
-        temp = temp->suiv;
+        ecrireUnite(f, temp->pdata);
+        *temp = *temp->suiv;
     }
     int nbHorde = 0;
     temp = listeHorde;
